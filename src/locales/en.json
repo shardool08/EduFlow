@@ -1,0 +1,110 @@
+{
+  "common": {
+    "appName": "EduFlow",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "save": "Save",
+    "continue": "Continue",
+    "back": "Back",
+    "or": "or"
+  },
+  "auth": {
+    "welcome": {
+      "title": "Welcome to EduFlow",
+      "subtitle": "Your personalized learning journey starts here",
+      "getStarted": "Get Started",
+      "signIn": "Already have an account? Sign In"
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Sign in to continue your learning",
+      "email": "Email address",
+      "password": "Password",
+      "forgotPassword": "Forgot password?",
+      "signIn": "Sign In",
+      "noAccount": "Don't have an account?",
+      "register": "Sign Up"
+    },
+    "register": {
+      "title": "Create your account",
+      "steps": {
+        "role": {
+          "title": "I am a...",
+          "subtitle": "Choose your role to personalize your experience",
+          "student": "Student",
+          "studentDesc": "I want to learn and grow",
+          "teacher": "Teacher",
+          "teacherDesc": "I want to educate and inspire",
+          "parent": "Parent",
+          "parentDesc": "I want to track my child's progress"
+        },
+        "info": {
+          "title": "Tell us about you",
+          "subtitle": "We'll use this to personalize your experience",
+          "fullName": "Full name",
+          "email": "Email address"
+        },
+        "password": {
+          "title": "Secure your account",
+          "subtitle": "Choose a strong password",
+          "password": "Password",
+          "confirmPassword": "Confirm password",
+          "createAccount": "Create Account"
+        }
+      },
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign In"
+    },
+    "verifyEmail": {
+      "title": "Check your email",
+      "subtitle": "We've sent a verification link to",
+      "instruction": "Please verify your email to continue",
+      "resend": "Resend email",
+      "backToLogin": "Back to Sign In"
+    },
+    "errors": {
+      "invalidEmail": "Please enter a valid email",
+      "passwordTooShort": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match",
+      "nameRequired": "Full name is required",
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required",
+      "invalidCredentials": "Invalid email or password",
+      "emailInUse": "This email is already registered",
+      "generic": "Something went wrong. Please try again."
+    }
+  },
+  "tabs": {
+    "home": "Home",
+    "courses": "Courses",
+    "progress": "Progress",
+    "profile": "Profile"
+  },
+  "home": {
+    "greeting": "Hello, {{name}}!",
+    "subtitle": "Ready to learn today?",
+    "continueLearning": "Continue Learning",
+    "recommended": "Recommended for You"
+  },
+  "courses": {
+    "title": "Courses",
+    "search": "Search courses...",
+    "empty": "No courses found",
+    "enrolled": "Enrolled"
+  },
+  "progress": {
+    "title": "My Progress",
+    "streak": "Day Streak",
+    "completed": "Completed",
+    "hours": "Hours Learned"
+  },
+  "profile": {
+    "title": "Profile",
+    "editProfile": "Edit Profile",
+    "settings": "Settings",
+    "signOut": "Sign Out",
+    "signOutConfirm": "Are you sure you want to sign out?"
+  }
+}
