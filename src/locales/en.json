@@ -129,6 +129,21 @@
     "typeMessage": "Type your message...",
     "send": "Send",
     "done": "Plan Ready!",
-    "backConfirm": "You will lose your planning progress. Are you sure?"
+    "backConfirm": "You will lose your planning progress. Are you sure?",
+    "generatePlan": "Generate Plan"
+  },
+  "share": {
+    "title": "Plan Ready",
+    "documents": "Documents",
+    "lessonPlan": "Lesson Plan",
+    "lessonPlanDesc": "Complete 40-minute lesson plan",
+    "worksheet": "Worksheet",
+    "worksheetDesc": "Student activity sheet",
+    "assessment": "Assessment Sheet",
+    "assessmentDesc": "Check for understanding",
+    "generatePlan": "Generate PDFs",
+    "generating": "Generating...",
+    "shareWhatsApp": "📤 Share on WhatsApp",
+    "sharing": "Sharing..."
   }
 }

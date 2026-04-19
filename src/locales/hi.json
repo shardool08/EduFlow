@@ -129,6 +129,21 @@
     "typeMessage": "यहाँ type करें...",
     "send": "भेजें",
     "done": "Plan तैयार है!",
-    "backConfirm": "आप plan छोड़ रहे हैं। क्या आप सुनिश्चित हैं?"
+    "backConfirm": "आप plan छोड़ रहे हैं। क्या आप सुनिश्चित हैं?",
+    "generatePlan": "Plan बनाएं"
+  },
+  "share": {
+    "title": "Plan तैयार है",
+    "documents": "दस्तावेज़",
+    "lessonPlan": "Lesson Plan",
+    "lessonPlanDesc": "40 मिनट का पूरा plan",
+    "worksheet": "Worksheet",
+    "worksheetDesc": "बच्चों के लिए activity sheet",
+    "assessment": "Assessment Sheet",
+    "assessmentDesc": "मूल्यांकन पत्रक",
+    "generatePlan": "PDF बनाएं",
+    "generating": "बन रहा है...",
+    "shareWhatsApp": "📤 WhatsApp पर भेजें",
+    "sharing": "भेज रहे हैं..."
   }
 }

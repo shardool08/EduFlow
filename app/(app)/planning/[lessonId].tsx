@@ -108,6 +108,12 @@ export default function PlanningScreen() {
           {isComplete && (
             <View style={styles.completeBanner}>
               <Text style={styles.completeText}>🎉 {t('planning.done')}</Text>
+              <Pressable
+                style={styles.generateButton}
+                onPress={() => router.push('/(app)/plan-review')}
+              >
+                <Text style={styles.generateButtonText}>{t('planning.generatePlan')}</Text>
+              </Pressable>
             </View>
           )}
         </ScrollView>
@@ -152,4 +158,13 @@ const styles = StyleSheet.create({
     borderColor: '#6EE7B7',
   },
   completeText: { fontSize: 16, fontWeight: '600', color: '#065F46' },
+  generateButton: {
+    marginTop: 12,
+    backgroundColor: '#4F46E5',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+  },
+  generateButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700' },
 });

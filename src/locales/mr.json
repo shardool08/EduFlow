@@ -129,6 +129,21 @@
     "typeMessage": "इथे type करा...",
     "send": "पाठवा",
     "done": "Plan तयार आहे!",
-    "backConfirm": "तुम्ही plan सोडणार आहात. तुम्हाला खात्री आहे का?"
+    "backConfirm": "तुम्ही plan सोडणार आहात. तुम्हाला खात्री आहे का?",
+    "generatePlan": "Plan तयार करा"
+  },
+  "share": {
+    "title": "Plan तयार आहे",
+    "documents": "कागदपत्रे",
+    "lessonPlan": "Lesson Plan",
+    "lessonPlanDesc": "40 मिनिटांचा संपूर्ण plan",
+    "worksheet": "Worksheet",
+    "worksheetDesc": "मुलांसाठी activity sheet",
+    "assessment": "Assessment Sheet",
+    "assessmentDesc": "मूल्यमापन पत्रक",
+    "generatePlan": "PDF तयार करा",
+    "generating": "तयार होत आहे...",
+    "shareWhatsApp": "📤 WhatsApp वर पाठवा",
+    "sharing": "पाठवत आहे..."
   }
 }
