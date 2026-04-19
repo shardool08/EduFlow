@@ -1,0 +1,134 @@
+{
+  "common": {
+    "appName": "Pathshala AI",
+    "loading": "लोड हो रहा है...",
+    "error": "कुछ गलत हुआ",
+    "retry": "फिर से करें",
+    "cancel": "रद्द करें",
+    "save": "सेव करें",
+    "continue": "आगे",
+    "back": "वापस",
+    "or": "या"
+  },
+  "auth": {
+    "welcome": {
+      "title": "नमस्ते! 🙏",
+      "subtitle": "आपके रोज़ाना English lesson के लिए सहायक",
+      "getStarted": "शुरू करें",
+      "signIn": "पहले से account है? Login करें"
+    },
+    "login": {
+      "title": "वापस स्वागत है",
+      "subtitle": "Login करें और जारी रखें",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Password भूल गए?",
+      "signIn": "Login",
+      "noAccount": "Account नहीं है?",
+      "register": "Register करें"
+    },
+    "register": {
+      "title": "Account बनाएं",
+      "steps": {
+        "role": {
+          "title": "मैं हूँ...",
+          "subtitle": "अपनी भूमिका चुनें",
+          "student": "विद्यार्थी",
+          "studentDesc": "मुझे सीखना है",
+          "teacher": "शिक्षक",
+          "teacherDesc": "मुझे पढ़ाना है",
+          "parent": "अभिभावक",
+          "parentDesc": "मेरे बच्चे की प्रगति देखनी है"
+        },
+        "info": {
+          "title": "अपने बारे में बताएं",
+          "subtitle": "आपका अनुभव personalize करने के लिए",
+          "fullName": "आपका नाम",
+          "email": "Email"
+        },
+        "password": {
+          "title": "Account सुरक्षित करें",
+          "subtitle": "एक अच्छा password चुनें",
+          "password": "Password",
+          "confirmPassword": "Password confirm करें",
+          "createAccount": "Account बनाएं"
+        }
+      },
+      "haveAccount": "पहले से account है?",
+      "signIn": "Login करें"
+    },
+    "verifyEmail": {
+      "title": "Email चेक करें",
+      "subtitle": "हमने verification link भेजी है:",
+      "instruction": "जारी रखने के लिए email verify करें",
+      "resend": "Email दोबारा भेजें",
+      "backToLogin": "Login पर वापस जाएं"
+    },
+    "errors": {
+      "invalidEmail": "सही email डालें",
+      "passwordTooShort": "Password कम से कम 8 अक्षर का होना चाहिए",
+      "passwordMismatch": "Passwords मेल नहीं खाते",
+      "nameRequired": "नाम ज़रूरी है",
+      "emailRequired": "Email ज़रूरी है",
+      "passwordRequired": "Password ज़रूरी है",
+      "invalidCredentials": "Email या password गलत है",
+      "emailInUse": "यह email पहले से registered है",
+      "generic": "कुछ गलत हुआ। फिर से कोशिश करें।"
+    }
+  },
+  "tabs": {
+    "home": "होम",
+    "courses": "पाठ",
+    "progress": "प्रगति",
+    "profile": "प्रोफाइल"
+  },
+  "home": {
+    "greeting": "नमस्ते, {{name}}!",
+    "subtitle": "आज पाठ की तैयारी करनी है?",
+    "continueLearning": "तैयारी जारी रखें",
+    "recommended": "आपके लिए सुझाए गए"
+  },
+  "courses": {
+    "title": "पाठ",
+    "search": "पाठ खोजें...",
+    "empty": "कोई पाठ नहीं मिला",
+    "enrolled": "पूर्ण"
+  },
+  "progress": {
+    "title": "मेरी प्रगति",
+    "streak": "दिनों की streak",
+    "completed": "पूर्ण",
+    "hours": "तैयारी के घंटे"
+  },
+  "profile": {
+    "title": "प्रोफाइल",
+    "editProfile": "प्रोफाइल बदलें",
+    "settings": "Settings",
+    "signOut": "Logout",
+    "signOutConfirm": "क्या आप सच में logout करना चाहते हैं?"
+  },
+  "planning": {
+    "speak": "🎤  बोलिए",
+    "typeInstead": "⌨ Type करें",
+    "listening": "सुन रहा हूँ...",
+    "processing": "समझ रहा हूँ...",
+    "thinking": "सोच रहा हूँ...",
+    "confirm": "✓ हाँ",
+    "retry": "🔄 फिर बोलिए",
+    "notRecognized": "पहचान नहीं हुई। फिर बोलिए या type करें।",
+    "phase": "चरण {{current}} / {{total}}",
+    "phases": {
+      "1": "उद्देश्य",
+      "2": "Hook",
+      "3": "सामग्री",
+      "4": "Activity",
+      "5": "अभ्यास",
+      "6": "मूल्यांकन",
+      "7": "समीक्षा"
+    },
+    "typeMessage": "यहाँ type करें...",
+    "send": "भेजें",
+    "done": "Plan तैयार है!",
+    "backConfirm": "आप plan छोड़ रहे हैं। क्या आप सुनिश्चित हैं?"
+  }
+}

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "EduFlow",
+    "name": "Pathshala AI",
     "slug": "eduflow",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,14 +14,19 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.eduflow.app"
+      "bundleIdentifier": "com.eduflow.app",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Microphone access is needed for voice input during lesson planning.",
+        "NSSpeechRecognitionUsageDescription": "Speech recognition is used to transcribe your lesson planning conversations."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#4F46E5"
       },
-      "package": "com.eduflow.app"
+      "package": "com.eduflow.app",
+      "permissions": ["RECORD_AUDIO"]
     },
     "web": {
       "bundler": "metro",
@@ -31,6 +36,12 @@
     "plugins": [
       "expo-router",
       "expo-font",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow Pathshala AI to access your microphone for voice input."
+        }
+      ],
       [
         "expo-splash-screen",
         {

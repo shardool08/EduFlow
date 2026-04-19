@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "EduFlow",
+    "appName": "Pathshala AI",
     "loading": "Loading...",
     "error": "An error occurred",
     "retry": "Try again",
@@ -12,14 +12,14 @@
   },
   "auth": {
     "welcome": {
-      "title": "Welcome to EduFlow",
-      "subtitle": "Your personalized learning journey starts here",
+      "title": "Welcome to Pathshala AI",
+      "subtitle": "Your daily English lesson companion",
       "getStarted": "Get Started",
       "signIn": "Already have an account? Sign In"
     },
     "login": {
       "title": "Welcome back",
-      "subtitle": "Sign in to continue your learning",
+      "subtitle": "Sign in to continue",
       "email": "Email address",
       "password": "Password",
       "forgotPassword": "Forgot password?",
@@ -78,27 +78,27 @@
   },
   "tabs": {
     "home": "Home",
-    "courses": "Courses",
+    "courses": "Lessons",
     "progress": "Progress",
     "profile": "Profile"
   },
   "home": {
     "greeting": "Hello, {{name}}!",
-    "subtitle": "Ready to learn today?",
-    "continueLearning": "Continue Learning",
+    "subtitle": "Ready to plan today's lesson?",
+    "continueLearning": "Continue Planning",
     "recommended": "Recommended for You"
   },
   "courses": {
-    "title": "Courses",
-    "search": "Search courses...",
-    "empty": "No courses found",
-    "enrolled": "Enrolled"
+    "title": "Lessons",
+    "search": "Search lessons...",
+    "empty": "No lessons found",
+    "enrolled": "Completed"
   },
   "progress": {
     "title": "My Progress",
     "streak": "Day Streak",
     "completed": "Completed",
-    "hours": "Hours Learned"
+    "hours": "Hours Planned"
   },
   "profile": {
     "title": "Profile",
@@ -106,5 +106,29 @@
     "settings": "Settings",
     "signOut": "Sign Out",
     "signOutConfirm": "Are you sure you want to sign out?"
+  },
+  "planning": {
+    "speak": "🎤  Speak",
+    "typeInstead": "⌨ Type instead",
+    "listening": "Listening...",
+    "processing": "Processing...",
+    "thinking": "Thinking...",
+    "confirm": "✓ Confirm",
+    "retry": "🔄 Retry",
+    "notRecognized": "Couldn't recognize. Speak again or type.",
+    "phase": "Phase {{current}} of {{total}}",
+    "phases": {
+      "1": "Objective",
+      "2": "Hook",
+      "3": "Materials",
+      "4": "Activity",
+      "5": "Practice",
+      "6": "Assessment",
+      "7": "Review"
+    },
+    "typeMessage": "Type your message...",
+    "send": "Send",
+    "done": "Plan Ready!",
+    "backConfirm": "You will lose your planning progress. Are you sure?"
   }
 }

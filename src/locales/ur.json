@@ -1,0 +1,43 @@
+{
+  "common": {
+    "appName": "Pathshala AI",
+    "loading": "لوڈ ہو رہا ہے...",
+    "error": "کچھ غلط ہوا",
+    "retry": "دوبارہ کریں",
+    "cancel": "رد کریں",
+    "save": "محفوظ کریں",
+    "continue": "آگے",
+    "back": "پیچھے",
+    "or": "یا"
+  },
+  "tabs": {
+    "home": "ہوم",
+    "courses": "اسباق",
+    "progress": "ترقی",
+    "profile": "پروفائل"
+  },
+  "planning": {
+    "speak": "🎤  بولیں",
+    "typeInstead": "⌨ Type کریں",
+    "listening": "سن رہا ہوں...",
+    "processing": "سمجھ رہا ہوں...",
+    "thinking": "سوچ رہا ہوں...",
+    "confirm": "✓ ہاں",
+    "retry": "🔄 دوبارہ بولیں",
+    "notRecognized": "پہچان نہیں ہوئی۔ دوبارہ بولیں یا type کریں۔",
+    "phase": "مرحلہ {{current}} / {{total}}",
+    "phases": {
+      "1": "مقصد",
+      "2": "Hook",
+      "3": "مواد",
+      "4": "Activity",
+      "5": "مشق",
+      "6": "جائزہ",
+      "7": "نظرثانی"
+    },
+    "typeMessage": "یہاں type کریں...",
+    "send": "بھیجیں",
+    "done": "Plan تیار ہے!",
+    "backConfirm": "آپ plan چھوڑ رہے ہیں۔ کیا آپ یقین سے ہیں؟"
+  }
+}
