@@ -1,0 +1,140 @@
+/**
+ * Seed: Activity pool — Balbharati Grade 1 English
+ *
+ * Run:  npx tsx server/seeds/activities.ts
+ *
+ * Requires env vars:
+ *   SUPABASE_URL=https://<project>.supabase.co
+ *   SUPABASE_SERVICE_ROLE_KEY=<service-role-key>
+ */
+
+import { createClient } from '@supabase/supabase-js';
+import type { Activity } from '../../src/types';
+
+// ── Activity data ──────────────────────────────────────────────────────────
+
+export const ACTIVITIES: Activity[] = [
+
+  // ── Lesson 1 — Greetings ─────────────────────────────────────────────────
+
+  {
+    id: 'act-01-song',
+    title: { en: 'Hello Song with Actions', mr: '', hi: '', ur: '' },
+    type: 'song',
+    practiceMode: 'guided',
+    applicableLessons: ['bb-g1-en-01'],
+    minClassSize: 10,
+    maxClassSize: 80,
+    requiredResources: [],
+    durationMinutes: 10,
+    instructions: {
+      en: "Teach the chant 'Good morning, good morning, how do you do? Good morning, good morning, I am fine, thank you!' to a 4-beat clap, with children waving on 'good morning' and bowing on 'thank you'. After two whole-class rounds, children sing it face-to-face in pairs using each other's names.",
+      mr: '',
+      hi: '',
+      ur: '',
+    },
+    classroomManagementTips: [
+      'Tap the rhythm on a desk first before adding words so children internalize the beat.',
+      "Slow the tempo right down on 'thank you' so the bow gesture is clear.",
+    ],
+  },
+
+  {
+    id: 'act-01-game',
+    title: { en: 'Greeting Ball Pass', mr: '', hi: '', ur: '' },
+    type: 'game',
+    practiceMode: 'group',
+    applicableLessons: ['bb-g1-en-01'],
+    minClassSize: 10,
+    maxClassSize: 50,
+    requiredResources: ['soft ball or crumpled paper ball'],
+    durationMinutes: 15,
+    instructions: {
+      en: "Children sit in a circle; the teacher greets the child to their left — 'Good morning, ___!' — rolls the ball to them, and the child replies then passes it on. Alternate the greeting phrase each round between 'Good morning', 'Good afternoon', and 'Goodbye'.",
+      mr: '',
+      hi: '',
+      ur: '',
+    },
+    classroomManagementTips: [
+      'Use a sponge ball so no one gets hurt if a throw goes wide.',
+      'Allow a 5-second pause before requiring a response so shy children are not rushed.',
+    ],
+  },
+
+  {
+    id: 'act-01-craft',
+    title: { en: 'Greetings Flip Book', mr: '', hi: '', ur: '' },
+    type: 'craft',
+    practiceMode: 'individual',
+    applicableLessons: ['bb-g1-en-01'],
+    minClassSize: 10,
+    maxClassSize: 60,
+    requiredResources: ['A4 paper (one per child)', 'crayons'],
+    durationMinutes: 20,
+    instructions: {
+      en: "Children fold an A4 sheet into thirds to make a 3-page flip book, then draw one time of day on each page and write the matching greeting — 'Good morning!', 'Good afternoon!', 'Goodbye!' — copied from the board. In pairs, they flip through each other's books and read the greetings aloud.",
+      mr: '',
+      hi: '',
+      ur: '',
+    },
+    classroomManagementTips: [
+      'Pre-fold one book as a model and leave it on display while children work.',
+      'Write the three phrases on the board with a small sun / cloud / moon drawing so children know which page is which.',
+    ],
+  },
+
+];
+
+// ── Seed runner ────────────────────────────────────────────────────────────
+
+const SUPABASE_URL = process.env.SUPABASE_URL ?? '';
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? '';
+
+if (require.main === module) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY env vars.');
+    process.exit(1);
+  }
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+    auth: { persistSession: false },
+  });
+
+  // Map TypeScript camelCase shape → DB snake_case columns
+  const rows = ACTIVITIES.map((a) => ({
+    id: a.id,
+    title_en: a.title.en,
+    title_mr: a.title.mr,
+    title_hi: a.title.hi,
+    title_ur: a.title.ur,
+    type: a.type,
+    practice_mode: a.practiceMode,
+    applicable_lessons: a.applicableLessons,
+    min_class_size: a.minClassSize,
+    max_class_size: a.maxClassSize,
+    required_resources: a.requiredResources,
+    duration_minutes: a.durationMinutes,
+    instructions_en: a.instructions.en,
+    instructions_mr: a.instructions.mr,
+    instructions_hi: a.instructions.hi,
+    instructions_ur: a.instructions.ur,
+    classroom_management_tips: a.classroomManagementTips,
+  }));
+
+  (async () => {
+    console.log(`Seeding ${rows.length} activities into ${SUPABASE_URL} …\n`);
+
+    const { data, error } = await supabase
+      .from('activities')
+      .upsert(rows, { onConflict: 'id' })
+      .select('id, title_en');
+
+    if (error) {
+      console.error('Seed failed:', error.message);
+      process.exit(1);
+    }
+
+    data?.forEach((r) => console.log(`  ✓  ${r.id}  —  ${r.title_en}`));
+    console.log(`\nDone — ${data?.length ?? 0} rows upserted.`);
+  })();
+}
