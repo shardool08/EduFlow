@@ -83,6 +83,74 @@ export const ACTIVITIES: Activity[] = [
     ],
   },
 
+  // ── Lesson 2 — My School ─────────────────────────────────────────────────
+
+  {
+    id: 'act-02-song',
+    title: { en: 'My School Song', mr: '', hi: '', ur: '' },
+    type: 'song',
+    practiceMode: 'guided',
+    applicableLessons: ['bb-g1-en-02'],
+    minClassSize: 10,
+    maxClassSize: 80,
+    requiredResources: [],
+    durationMinutes: 10,
+    instructions: {
+      en: "Teach this chant to the tune of 'Mary Had a Little Lamb': 'This is my school, my school, my school — this is my school, I love it so', swapping 'school' one word at a time — 'my bag', 'my book', 'my teacher' — while pointing to each real object. After two whole-class rounds, individual children stand, point, and lead one verse each.",
+      mr: '',
+      hi: '',
+      ur: '',
+    },
+    classroomManagementTips: [
+      'Point to the real object every time it is named so gesture and word are always linked.',
+      'Keep the pace slow — vocabulary retention matters more than singing speed.',
+    ],
+  },
+
+  {
+    id: 'act-02-game',
+    title: { en: 'Touch and Name', mr: '', hi: '', ur: '' },
+    type: 'game',
+    practiceMode: 'guided',
+    applicableLessons: ['bb-g1-en-02'],
+    minClassSize: 10,
+    maxClassSize: 60,
+    requiredResources: ['real classroom objects: book, bag, chalk, ruler, pencil'],
+    durationMinutes: 15,
+    instructions: {
+      en: "Place five or six school objects on the front desk; call one child at a time, say the Marathi name, and the child must touch the correct object and say 'This is a ___' in English. After the individual round, play in teams — each team has 30 seconds to touch and name as many objects as possible.",
+      mr: '',
+      hi: '',
+      ur: '',
+    },
+    classroomManagementTips: [
+      'Keep objects on a raised surface so all children can see from their seats.',
+      'Have a helper student manage the waiting queue so you can focus on the active child.',
+    ],
+  },
+
+  {
+    id: 'act-02-craft',
+    title: { en: 'My School Bag Drawing', mr: '', hi: '', ur: '' },
+    type: 'craft',
+    practiceMode: 'individual',
+    applicableLessons: ['bb-g1-en-02'],
+    minClassSize: 10,
+    maxClassSize: 60,
+    requiredResources: ['A4 paper (one per child)', 'crayons or colour pencils'],
+    durationMinutes: 20,
+    instructions: {
+      en: "Each child draws their school bag and at least three items inside it — a book, a pencil, and one item of their choice — then writes the English name below each object copied from the board. When finished, each child holds up their drawing and names one object aloud; display the finished work on the classroom wall.",
+      mr: '',
+      hi: '',
+      ur: '',
+    },
+    classroomManagementTips: [
+      'Give a 2-minute warning before the sharing round so children can finish colouring.',
+      'Seat children apart — this is personal work, not a copying exercise.',
+    ],
+  },
+
 ];
 
 // ── Seed runner ────────────────────────────────────────────────────────────
