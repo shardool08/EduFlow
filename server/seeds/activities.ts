@@ -151,6 +151,76 @@ export const ACTIVITIES: Activity[] = [
     ],
   },
 
+  // ── Lesson 6 — My Family ─────────────────────────────────────────────────
+
+  {
+    id: 'act-06-song',
+    title: { en: 'This Is My Mother Action Song', mr: '', hi: '', ur: '' },
+    type: 'song',
+    practiceMode: 'guided',
+    applicableLessons: ['bb-g1-en-06'],
+    minClassSize: 10,
+    maxClassSize: 80,
+    requiredResources: [],
+    durationMinutes: 10,
+    instructions: {
+      en: "Teach the chant 'This is my mother, this is my father, this is my sister, this is my brother — I love my family!' with a different hand gesture for each member: wave for mother, thumbs-up for father, pinky for sister, fist for brother. After two class rounds, call out a family member and children hold up the matching hand signal without singing.",
+      mr: '',
+      hi: '',
+      ur: '',
+    },
+    classroomManagementTips: [
+      'Introduce one gesture at a time before combining them with the chant.',
+      'The silent signal round at the end doubles as a quick comprehension check.',
+    ],
+  },
+
+  {
+    id: 'act-06-game',
+    title: { en: 'Family Flashcard Guess', mr: '', hi: '', ur: '' },
+    type: 'game',
+    practiceMode: 'group',
+    applicableLessons: ['bb-g1-en-06'],
+    minClassSize: 10,
+    maxClassSize: 60,
+    requiredResources: [
+      'one set of family flashcards per pair: mother, father, sister, brother, grandmother, grandfather',
+    ],
+    durationMinutes: 15,
+    instructions: {
+      en: "In pairs, Partner A holds a flashcard face-out so Partner B cannot see it; Partner B asks up to three yes/no questions in English — 'Is it a woman?', 'Is it old?' — then guesses 'This is your ___!' Partner A confirms with 'Yes, this is my ___!' and the pair swap roles after each card.",
+      mr: '',
+      hi: '',
+      ur: '',
+    },
+    classroomManagementTips: [
+      'Model one full question-and-guess exchange at the front before pairs start.',
+      'Write the three allowed question stems on the board so children can reference them.',
+    ],
+  },
+
+  {
+    id: 'act-06-craft',
+    title: { en: 'My Family Portrait', mr: '', hi: '', ur: '' },
+    type: 'craft',
+    practiceMode: 'individual',
+    applicableLessons: ['bb-g1-en-06'],
+    minClassSize: 10,
+    maxClassSize: 60,
+    requiredResources: ['A4 paper (one per child)', 'crayons', 'family word bank on the board'],
+    durationMinutes: 20,
+    instructions: {
+      en: "Each child draws at least four family members and writes the correct English label beneath each figure, copying from the word bank on the board. After drawing, children do a gallery walk — visiting three classmates' pictures and saying 'This is his/her ___' for one person in each picture.",
+      mr: '',
+      hi: '',
+      ur: '',
+    },
+    classroomManagementTips: [
+      'Reassure children that stick figures are perfectly fine — this is a language activity, not an art lesson.',
+      'Include small illustrations next to each word on the board so pre-readers can match by picture.',
+    ],
+  },
+
 ];
 
 // ── Seed runner ────────────────────────────────────────────────────────────
