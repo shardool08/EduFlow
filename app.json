@@ -28,12 +28,7 @@
       "package": "com.eduflow.app",
       "permissions": ["RECORD_AUDIO"]
     },
-    "web": {
-      "bundler": "metro",
-      "output": "static",
-      "favicon": "./assets/images/favicon.png"
-    },
-    "plugins": [
+"plugins": [
       "expo-router",
       "expo-font",
       [
