@@ -36,9 +36,7 @@ export default function PlanReviewScreen() {
       <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent}>
         {lesson && (
           <View style={styles.lessonCard}>
-            <Text style={styles.lessonNum}>
-              {t('planning.phase', { current: '', total: '' }).split(' ')[0]} {lesson.lessonNumber}
-            </Text>
+            <Text style={styles.lessonNum}>Lesson {lesson.lessonNumber}</Text>
             <Text style={styles.lessonTitle}>{lesson.title.en}</Text>
             <Text style={styles.lessonSubtitle}>{lesson.title.mr}</Text>
             {decisions.objective ? (

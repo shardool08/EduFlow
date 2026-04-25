@@ -1,6 +1,71 @@
 import type { Activity } from '@/types';
 
 export const activities: Activity[] = [
+  // ─── Lesson 1: Greetings ────────────────────────────────────────────────────
+  {
+    id: 'act-greet-001',
+    title: { en: 'Hello Song with Actions', mr: 'अभिवादनाचे गाणे', hi: 'Hello गाना', ur: 'Hello گانا' },
+    type: 'song',
+    practiceMode: 'guided',
+    applicableLessons: ['bb-g1-en-01'],
+    minClassSize: 10,
+    maxClassSize: 80,
+    requiredResources: [],
+    durationMinutes: 10,
+    instructions: {
+      en: "Teach the chant 'Good morning, good morning, how do you do? I am fine, thank you!' to a 4-beat clap. Children wave on 'good morning' and bow on 'thank you'. Repeat until confident, then practise in pairs.",
+      mr: "'Good morning, good morning, how do you do? I am fine, thank you!' हे गाणे 4-beat टाळ्यांवर शिकवा. 'good morning' ला हात हलवा, 'thank you' ला झुका. आत्मविश्वास येईपर्यंत पुन्हा करा.",
+      hi: "4-beat ताली पर गाना सिखाएं। 'good morning' पर हाथ हिलाएं, 'thank you' पर झुकें।",
+      ur: "4-beat تالی پر گانا سکھائیں۔ 'good morning' پر ہاتھ ہلائیں، 'thank you' پر جھکیں۔",
+    },
+    classroomManagementTips: [
+      'Tap desk rhythm before adding words so children internalise the beat',
+      'Slow the tempo on "thank you" so the gesture is clear',
+    ],
+  },
+  {
+    id: 'act-greet-002',
+    title: { en: 'Greeting Ball Pass', mr: 'अभिवादन बॉल पास', hi: 'Greeting Ball Pass', ur: 'Greeting Ball Pass' },
+    type: 'game',
+    practiceMode: 'group',
+    applicableLessons: ['bb-g1-en-01'],
+    minClassSize: 10,
+    maxClassSize: 50,
+    requiredResources: ['soft ball or crumpled paper ball'],
+    durationMinutes: 15,
+    instructions: {
+      en: "Children sit in a circle. Teacher greets the child to the left — 'Good morning, ___!' — and rolls the ball. Child replies and passes it on. Alternate between 'Good morning', 'Good afternoon', and 'Goodbye' each round.",
+      mr: "मुले वर्तुळात बसतात. शिक्षक डाव्या मुलाला 'Good morning, ___!' म्हणून बॉल पाठवतात. मूल उत्तर देऊन पुढे पाठवते. प्रत्येक फेरीत 'Good morning', 'Good afternoon', 'Goodbye' आळीपाळीने वापरा.",
+      hi: "बच्चे वृत्त में बैठते हैं। शिक्षक बाईं ओर 'Good morning, ___!' कहकर ball लुढ़काते हैं। बच्चा जवाब देकर आगे देता है।",
+      ur: "بچے دائرے میں بیٹھتے ہیں۔ استاد بائیں طرف 'Good morning, ___!' کہہ کر ball لڑھکاتا ہے۔",
+    },
+    classroomManagementTips: [
+      'Use a sponge ball so no one gets hurt if a throw goes wide',
+      'Allow 5 seconds thinking time so shy children are not rushed',
+    ],
+  },
+  {
+    id: 'act-greet-003',
+    title: { en: 'Good Morning Shop', mr: 'गुड मॉर्निंग दुकान', hi: 'Good Morning दुकान', ur: 'Good Morning دکان' },
+    type: 'roleplay',
+    practiceMode: 'group',
+    applicableLessons: ['bb-g1-en-01'],
+    minClassSize: 10,
+    maxClassSize: 40,
+    requiredResources: [],
+    durationMinutes: 15,
+    instructions: {
+      en: "Two chairs face-to-face at the front make a 'shop'. One child is the shopkeeper, one the customer. Customer says 'Good morning!' and shopkeeper replies in kind, then customer says 'Thank you, goodbye!' Rotate pairs every 2 minutes.",
+      mr: "पुढे दोन खुर्च्या समोरासमोर ठेवून 'दुकान' बनवा. एक दुकानदार, एक ग्राहक. ग्राहक 'Good morning!' म्हणतो, दुकानदार उत्तर देतो, मग 'Thank you, goodbye!' दर 2 मिनिटांनी जोड्या बदला.",
+      hi: "दो कुर्सियाँ आमने-सामने रखकर दुकान बनाएं। एक दुकानदार, एक ग्राहक। अभिवादन का आदान-प्रदान करें। हर 2 मिनट में जोड़े बदलें।",
+      ur: "دو کرسیاں آمنے سامنے رکھ کر دکان بنائیں۔ ایک دکاندار، ایک گاہک۔ سلام کا تبادلہ کریں۔",
+    },
+    classroomManagementTips: [
+      'Demonstrate the full exchange yourself before sending children up',
+      'Whisper-prompt shy children just before their turn',
+    ],
+  },
+
   // ─── Lesson 5: My Body ──────────────────────────────────────────────────────
   {
     id: 'act-body-001',

@@ -121,7 +121,17 @@ export const useConversationStore = create<ConversationStore>((set, get) => ({
         isAiThinking: false,
       }));
     } catch {
-      set({ isAiThinking: false });
+      set((s) => ({
+        messages: [
+          ...s.messages,
+          makeMsg(
+            'ai',
+            'माफ करा, AI उपलब्ध नाही. कृपया internet तपासा आणि पुन्हा प्रयत्न करा.\nSorry, the AI assistant is unavailable. Please check your connection and try again.',
+            1
+          ),
+        ],
+        isAiThinking: false,
+      }));
     }
   },
 
@@ -147,7 +157,10 @@ export const useConversationStore = create<ConversationStore>((set, get) => ({
         ? Math.min(currentPhase + 1, 7) as ConversationPhase
         : currentPhase;
 
-      const isComplete = nextPhase === 7 && displayText.toLowerCase().includes('confirm');
+      // Complete when teacher responds during phase 7 (the review/confirm phase).
+      // currentPhase===7 means we were already in phase 7 before this reply;
+      // nextPhase===7 means no further advance happened — teacher confirmed the plan.
+      const isComplete = currentPhase === 7 && nextPhase === 7;
 
       set((s) => ({
         messages: [...s.messages, makeMsg('ai', displayText, nextPhase)],
