@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -10,17 +9,11 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useState } from 'react';
 
 export default function WelcomeScreen() {
   const router = useRouter();
   const [phone, setPhone] = useState('');
-
-  const canSubmit = phone.replace(/\D/g, '').length === 10;
-
-  function handleSendOtp() {
-    // OTP sending skipped for now — navigate straight to the app.
-    router.replace('/(tabs)/home');
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -28,7 +21,6 @@ export default function WelcomeScreen() {
         style={styles.inner}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* Greeting */}
         <View style={styles.hero}>
           <Text style={styles.namaste}>नमस्कार! 🙏</Text>
           <Text style={styles.tagline}>
@@ -36,7 +28,6 @@ export default function WelcomeScreen() {
           </Text>
         </View>
 
-        {/* Phone input */}
         <View style={styles.form}>
           <Text style={styles.label}>तुमचा mobile number</Text>
           <View style={styles.phoneRow}>
@@ -56,13 +47,8 @@ export default function WelcomeScreen() {
           </View>
 
           <Pressable
-            style={({ pressed }) => [
-              styles.button,
-              !canSubmit && styles.buttonDisabled,
-              pressed && canSubmit && styles.buttonPressed,
-            ]}
-            onPress={handleSendOtp}
-            disabled={!canSubmit}
+            style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+            onPress={() => router.replace('/(tabs)/home')}
             accessibilityRole="button"
             accessibilityLabel="OTP पाठवा"
           >
@@ -122,7 +108,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minHeight: 56,
   },
-  buttonDisabled: { backgroundColor: '#C7D2FE' },
   buttonPressed: { opacity: 0.85 },
   buttonText: { fontSize: 18, fontWeight: '700', color: '#FFFFFF' },
 
