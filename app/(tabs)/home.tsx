@@ -1,12 +1,11 @@
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-const LESSONS = [
-  { id: 'bb-g1-en-01', number: 1, en: 'Greetings', mr: 'अभिवादन' },
-  { id: 'bb-g1-en-06', number: 6, en: 'My Family', mr: 'माझे कुटुंब' },
-];
+import { LESSONS } from '@/data/lessons';
 
 export default function HomeScreen() {
+  const router = useRouter();
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
@@ -44,6 +43,7 @@ export default function HomeScreen() {
           {LESSONS.map((lesson) => (
             <Pressable
               key={lesson.id}
+              onPress={() => router.push(`/planning/${lesson.id}`)}
               style={({ pressed }) => [styles.lessonCard, pressed && styles.lessonCardPressed]}
               accessibilityRole="button"
               accessibilityLabel={`Lesson ${lesson.number}: ${lesson.en}`}
