@@ -12,7 +12,7 @@ export default function HomeScreen() {
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
 
         {/* Header */}
-        <Text style={styles.appName}>Pathshala AI</Text>
+        <Text style={styles.appName}>EduFlow</Text>
         <Text style={styles.appTagline}>तुमचा English lesson planning साथी</Text>
 
         {/* Two equal entry-point buttons */}
