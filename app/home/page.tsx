@@ -2,7 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { translations } from "@/lib/translations";
-import { useLang } from "@/lib/useLang";
+import type { Language } from "@/lib/translations";
+
+function getLang(): Language {
+  if (typeof window === "undefined") return "mr";
+  return (localStorage.getItem("lang") as Language) ?? "mr";
+}
 
 const LESSONS: { id: string; titleKey: "lesson1Title" | "lesson6Title" }[] = [
   { id: "1", titleKey: "lesson1Title" },
@@ -11,18 +16,17 @@ const LESSONS: { id: string; titleKey: "lesson1Title" | "lesson6Title" }[] = [
 
 export default function HomePage() {
   const router = useRouter();
-  const lang = useLang();
-
+  const lang = getLang();
   const t = translations[lang];
   const isRtl = lang === "ur";
 
   return (
     <main
       dir={isRtl ? "rtl" : "ltr"}
-      className="flex flex-col min-h-screen bg-white max-w-[480px] mx-auto"
+      className="flex flex-col min-h-screen bg-white"
     >
       <header className="bg-[#2B5F3F] text-white px-6 py-4">
-        <h1 className="text-2xl font-bold">{t.appName}</h1>
+        <h1 className="text-2xl font-bold">EduFlow</h1>
         <p className="text-lg mt-1">{t.homeGreeting}</p>
       </header>
 

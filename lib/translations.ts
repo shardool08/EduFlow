@@ -1,8 +1,6 @@
 export type Language = "mr" | "hi" | "ur" | "en";
 
 export interface Translations {
-  appName: string;
-  selectLanguage: string;
   greeting: string;
   phoneLabel: string;
   phonePlaceholder: string;
@@ -23,8 +21,6 @@ export interface Translations {
 
 export const translations: Record<Language, Translations> = {
   mr: {
-    appName: "EduFlow",
-    selectLanguage: "भाषा निवडा",
     greeting: "नमस्कार!",
     phoneLabel: "मोबाइल नंबर",
     phonePlaceholder: "१०-अंकी नंबर टाका",
@@ -44,8 +40,6 @@ export const translations: Record<Language, Translations> = {
     back: "← मागे",
   },
   hi: {
-    appName: "EduFlow",
-    selectLanguage: "भाषा चुनें",
     greeting: "नमस्ते!",
     phoneLabel: "मोबाइल नंबर",
     phonePlaceholder: "10 अंक का नंबर दर्ज करें",
@@ -64,8 +58,6 @@ export const translations: Record<Language, Translations> = {
     back: "← वापस",
   },
   ur: {
-    appName: "EduFlow",
-    selectLanguage: "زبان منتخب کریں",
     greeting: "آداب!",
     phoneLabel: "موبائل نمبر",
     phonePlaceholder: "10 ہندسے کا نمبر درج کریں",
@@ -84,8 +76,6 @@ export const translations: Record<Language, Translations> = {
     back: "← واپس",
   },
   en: {
-    appName: "EduFlow",
-    selectLanguage: "Select Language",
     greeting: "Hello!",
     phoneLabel: "Mobile Number",
     phonePlaceholder: "Enter 10-digit number",

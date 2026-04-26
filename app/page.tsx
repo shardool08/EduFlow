@@ -12,7 +12,7 @@ const LANGUAGES = [
 export default function LanguagePage() {
   const router = useRouter();
 
-  function selectLanguage(code: string) {
+  function select(code: string) {
     localStorage.setItem("lang", code);
     router.push("/register");
   }
@@ -21,13 +21,13 @@ export default function LanguagePage() {
     <main className="flex flex-col items-center justify-center min-h-screen bg-white px-6">
       <h1 className="text-4xl font-bold text-[#2B5F3F] mb-1">EduFlow</h1>
       <p className="text-lg text-gray-600 mb-10">Pathshala AI</p>
-      <div className="w-full max-w-sm flex flex-col gap-4">
+      <div className="w-full flex flex-col gap-4">
         {LANGUAGES.map((lang) => (
           <button
             key={lang.code}
             dir={lang.dir}
-            onClick={() => selectLanguage(lang.code)}
-            className="w-full min-h-14 rounded-xl bg-[#2B5F3F] text-white text-2xl font-semibold flex items-center justify-center"
+            onClick={() => select(lang.code)}
+            className="w-full min-h-14 rounded-xl bg-[#2B5F3F] text-white text-2xl font-semibold"
           >
             {lang.label}
           </button>

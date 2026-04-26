@@ -3,22 +3,25 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { translations } from "@/lib/translations";
-import { useLang } from "@/lib/useLang";
+import type { Language } from "@/lib/translations";
+
+function getLang(): Language {
+  if (typeof window === "undefined") return "mr";
+  return (localStorage.getItem("lang") as Language) ?? "mr";
+}
 
 export default function RegisterPage() {
   const router = useRouter();
-  const lang = useLang();
   const [phone, setPhone] = useState("");
-
-  const t = translations[lang];
-  const isRtl = lang === "ur";
+  const t = translations[getLang()];
+  const isRtl = getLang() === "ur";
 
   return (
     <main
       dir={isRtl ? "rtl" : "ltr"}
       className="flex flex-col items-center justify-center min-h-screen bg-white px-6"
     >
-      <div className="w-full max-w-sm">
+      <div className="w-full">
         <h1 className="text-4xl font-bold text-[#2B5F3F] mb-8 text-center">
           {t.greeting}
         </h1>

@@ -2,9 +2,14 @@
 
 import { useRouter, useParams } from "next/navigation";
 import { translations } from "@/lib/translations";
-import { useLang } from "@/lib/useLang";
+import type { Language } from "@/lib/translations";
 
-const LESSON_TITLE_KEY: Record<string, "lesson1Title" | "lesson6Title"> = {
+function getLang(): Language {
+  if (typeof window === "undefined") return "mr";
+  return (localStorage.getItem("lang") as Language) ?? "mr";
+}
+
+const TITLE_KEY: Record<string, "lesson1Title" | "lesson6Title"> = {
   "1": "lesson1Title",
   "6": "lesson6Title",
 };
@@ -13,18 +18,17 @@ export default function PlanPage() {
   const router = useRouter();
   const params = useParams();
   const id = (params?.id as string) ?? "1";
-  const lang = useLang();
-
+  const lang = getLang();
   const t = translations[lang];
   const isRtl = lang === "ur";
-  const titleKey = LESSON_TITLE_KEY[id] ?? "lesson1Title";
+  const titleKey = TITLE_KEY[id] ?? "lesson1Title";
   const lessonTitle = t[titleKey];
   const aiMessage = t.aiGreeting.replace("{lessonTitle}", lessonTitle);
 
   return (
     <main
       dir={isRtl ? "rtl" : "ltr"}
-      className="flex flex-col min-h-screen bg-white max-w-[480px] mx-auto"
+      className="flex flex-col min-h-screen bg-white"
     >
       <header className="bg-[#2B5F3F] text-white px-4 py-4 flex items-center gap-3">
         <button
