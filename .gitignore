@@ -9,6 +9,10 @@ out/
 .env
 .env*.local
 
+# firebase / debug logs
+firebase-debug*.log
+*.log
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
