@@ -1,0 +1,14 @@
+# Copy to local.properties (gitignored) and fill in your paths/keys.
+
+# Android SDK — Android Studio usually sets this automatically
+# sdk.dir=C\:\\Users\\YourName\\AppData\\Local\\Android\\Sdk
+
+# PedaStudio web API for quick-plan (required for "Plan this lesson")
+# Debug builds use local.properties; release builds use gradle.properties production URL.
+#
+# Emulator → local Next.js dev server:
+# pedastudio.api.url=http://10.0.2.2:3000
+#
+# Physical device on same Wi-Fi:
+# pedastudio.api.url=http://192.168.x.x:3000
+pedastudio.api.url=

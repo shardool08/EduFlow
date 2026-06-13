@@ -1,0 +1,15 @@
+[
+  {"id": "blackboard", "label": "Blackboard / Whiteboard", "emoji": "📝"},
+  {"id": "flashcards", "label": "Flashcards", "emoji": "🎴"},
+  {"id": "chart", "label": "Charts / Posters", "emoji": "📊"},
+  {"id": "picture_cards", "label": "Story Books / Picture cards", "emoji": "📦"},
+  {"id": "textbook", "label": "Textbook (Balbharati)", "emoji": "📚"},
+  {"id": "notebook", "label": "Notebooks for students", "emoji": "📓"},
+  {"id": "phone", "label": "Speaker / Audio player", "emoji": "📱"},
+  {"id": "projector", "label": "Projector / Smart Board / TV", "emoji": "📺"},
+  {"id": "computer", "label": "Computer / Laptop", "emoji": "💻"},
+  {"id": "printer", "label": "Printer", "emoji": "🖨️"},
+  {"id": "real_objects", "label": "Craft materials / Realia", "emoji": "📦"},
+  {"id": "puppets", "label": "Puppets / Props", "emoji": "🧸"},
+  {"id": "ball", "label": "Educational toys / Games", "emoji": "⚽"}
+]

@@ -1,0 +1,33 @@
+{
+  "firestore": {
+    "rules": "firestore.rules"
+  },
+  "storage": {
+    "rules": "storage.rules"
+  },
+  "apphosting": [
+    {
+      "backendId": "pedastudio-api",
+      "rootDir": ".",
+      "ignore": [
+        "node_modules",
+        ".git",
+        ".next",
+        "android",
+        "scripts",
+        ".cursor",
+        ".vscode",
+        "agent-tools",
+        "terminals",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "firebase-debug-latest.log",
+        "firebase-debug-run.log",
+        "*.log",
+        ".env",
+        ".env.*"
+      ],
+      "alwaysDeployFromSource": true
+    }
+  ]
+}

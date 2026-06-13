@@ -1,0 +1,45 @@
+# Firebase App Hosting — PedaStudio API (Next.js + /api/generate-plan)
+runConfig:
+  cpu: 2
+  memoryMiB: 4096
+  concurrency: 80
+  minInstances: 1
+  maxInstances: 10
+
+env:
+  - variable: ANTHROPIC_API_KEY
+    secret: ANTHROPIC_API_KEY
+    availability:
+      - RUNTIME
+
+  # Public Firebase web config (needed at build + runtime; .env is not uploaded)
+  - variable: NEXT_PUBLIC_FIREBASE_API_KEY
+    value: AIzaSyCt7pGP4gfnHgB0A88dHvcT5HxGXDT0_lw
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+    value: pedastudio-d6b2a.firebaseapp.com
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_PROJECT_ID
+    value: pedastudio-d6b2a
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+    value: pedastudio-d6b2a.firebasestorage.app
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+    value: "534281742387"
+    availability:
+      - BUILD
+      - RUNTIME
+  - variable: NEXT_PUBLIC_FIREBASE_APP_ID
+    value: 1:534281742387:web:0b47b831f1c9f82a9f9b46
+    availability:
+      - BUILD
+      - RUNTIME

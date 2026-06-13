@@ -1,0 +1,72 @@
+{
+  "lessonId": "1.1",
+  "title": "Body Body Pop Pop",
+  "cards": [
+    {
+      "word": "head",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Cheerful Indian school child pointing to their own head, simple flat cartoon illustration, bold outlines, bright colors, white background, no text, educational flashcard for 6 year olds"
+    },
+    {
+      "word": "shoulders",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Cartoon child upper body with shoulders clearly visible and highlighted, simple flat illustration, white background, no text, child-friendly educational flashcard"
+    },
+    {
+      "word": "eyes",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Pair of friendly cartoon eyes, large and clear, simple flat illustration, white background, no text, educational flashcard for children"
+    },
+    {
+      "word": "ears",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Cartoon human ear on side of head, simple flat illustration, bold outline, white background, no text, educational flashcard"
+    },
+    {
+      "word": "nose",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Cartoon human nose front view, simple cute illustration, white background, no text, educational flashcard for Grade 1"
+    },
+    {
+      "word": "mouth",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Smiling cartoon mouth with lips and teeth, simple flat illustration, white background, no text, child-friendly educational flashcard"
+    },
+    {
+      "word": "hand",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Open cartoon hand with palm facing viewer, five fingers visible, simple flat illustration, white background, no text, educational flashcard"
+    },
+    {
+      "word": "feet",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Pair of cartoon feet with simple shoes, front view, child legs, simple flat illustration, white background, no text, educational flashcard"
+    },
+    {
+      "word": "neck",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Cartoon neck connecting head to body, simple anatomy diagram for children, flat illustration, white background, no text, educational flashcard"
+    },
+    {
+      "word": "fingers",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Cartoon hand with five spread fingers clearly shown, simple flat illustration, white background, no text, educational flashcard for children"
+    },
+    {
+      "word": "chin",
+      "type": "word",
+      "category": "body part",
+      "image_prompt": "Cartoon lower face showing chin clearly, simple flat illustration, white background, no text, educational flashcard for Grade 1"
+    }
+  ]
+}

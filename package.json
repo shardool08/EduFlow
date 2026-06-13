@@ -1,0 +1,40 @@
+{
+  "name": "pedastudio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0 -p 3000",
+    "build": "next build",
+    "start": "next start",
+    "flashcards:images": "node scripts/generate-images.mjs --lesson=1.1",
+    "flashcards:images:all": "node scripts/generate-images.mjs",
+    "flashcards:content": "node scripts/generate-flashcards.mjs",
+    "flashcards:sync": "node scripts/sync-flashcard-manifest.mjs",
+    "android:curriculum": "node scripts/export-curriculum-android.mjs",
+    "android:assets": "node scripts/export-curriculum-android.mjs",
+    "firebase:seed-catalog": "node scripts/seed-firebase-catalog.mjs",
+    "apphosting:build": "next build",
+    "firebase:deploy-rules": "firebase deploy --only firestore:rules,storage",
+    "firebase:deploy-api": "firebase deploy --only \"apphosting:pedastudio-api\" --project pedastudio-d6b2a"
+  },
+  "dependencies": {
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.107.0",
+    "firebase": "^12.14.0",
+    "firebase-admin": "^13.10.0",
+    "next": "15.5.7",
+    "react": "19.0.1",
+    "react-dom": "19.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^19.0.0",
+    "firebase-tools": "^14.27.0",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": "22"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "534281742387",
+    "project_id": "pedastudio-d6b2a",
+    "storage_bucket": "pedastudio-d6b2a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534281742387:android:3b3977c3eec070989f9b46",
+        "android_client_info": {
+          "package_name": "com.tippingpoint.PedaStudio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDxt_TyN3JA94d-5cZXYXYvPW-xWMfIZ34"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

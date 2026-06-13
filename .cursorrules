@@ -1,0 +1,78 @@
+# PedaStudio — Project Context for Cursor
+
+## What is this?
+AI-powered lesson planning app for municipal school teachers (Grade 1-8) in Maharashtra, India.
+Built with Next.js 15 + Tailwind CSS v4 + Claude API. localStorage for data (no backend).
+
+## Core Philosophy
+- "Thinking partner, not generator" — teachers co-create, not consume
+- Voice-first designed for 40+ year old teachers
+- Uses real Balbharati 2025-26 textbooks from Maharashtra Board
+
+## Tech Stack
+- Next.js 15 (App Router, 'use client' components)
+- Tailwind CSS v4 (config in globals.css via @theme, NOT tailwind.config.js)
+- Claude API (Sonnet) for AI features
+- localStorage for all data storage
+- No database, no backend auth (OTP is simulated)
+
+## Color Theme — "Charming Seaside"
+- Primary (steel blue): #496580 (headers, text)
+- Accent (teal): #2A7A6A (buttons, selections) / #5BBFB0 (lighter)
+- Warm (peach): #FFDBBB, #F0A860 (highlights, current items)
+- Seaside border: #D0EAE4
+- Backgrounds: white, #F8FCFB (slight tint), #F0FAF8 (nav)
+- All colors defined as CSS variables in globals.css @theme block
+
+## Key Architecture Decisions
+- Two English textbooks per grade: L1 (English medium) and L2 (non-English medium)
+- Curriculum index auto-detects teacher's medium from localStorage
+- Lesson planning uses ONE API call (quick-plan form), not multi-turn chat
+- Flashcards use emoji map (lib/emoji-map.ts) — being upgraded to AI-generated images
+- 7-phase lesson wrapper: Objective → Hook → TLM Audit → Activity → Practice → Assessment → Closure
+- Bloom's taxonomy progression: Remember → Understand → Apply
+
+## File Structure
+- app/ — Next.js pages
+- app/home/ — Main dashboard with grade/subject switcher
+- app/quick-plan/[id]/ — One-shot co-creation lesson planning form (1 API call)
+- app/plan/[id]/ — OLD chat-based planning (7+ API calls, being deprecated)
+- app/plan-view/[id]/ — Rich plan viewer with PDF/WhatsApp sharing
+- app/lesson/[id]/ — Lesson detail with day-wise progress
+- app/scan/ — Camera scan textbook → AI analysis → 6 action types
+- app/flashcards/ — Flashcard selector with print sizes (Large/Medium/Small)
+- app/register/ — Phone + OTP registration flow
+- app/api/chat/ — Claude chat API (for old chat planning)
+- app/api/generate-plan/ — Plan generation API (accepts customPrompt)
+- app/api/scan/ — Textbook scan + analysis API
+- app/api/worksheet/ — Worksheet + flashcard generation API
+- lib/curriculum/ — Curriculum data (index.ts routes by grade/medium)
+- lib/curriculum/grade1-english.ts — Grade 1 L2 (38 lessons)
+- lib/curriculum/grade1-english-l1.ts — Grade 1 L1 (44 lessons)
+- lib/curriculum/grade2-english-l1.ts — Grade 2 L1 (36 lessons)
+- lib/curriculum/grade2-english-l2.ts — Grade 2 L2 (44 lessons)
+- lib/curriculum/grade3-english-l2.ts — Grade 3 L2 (48 lessons)
+- lib/curriculum/grade4-english-l2.ts — Grade 4 L2 (39 lessons)
+- lib/curriculum/grade5-english-l2.ts — Grade 5 L2 (36 lessons)
+- lib/emoji-map.ts — 500+ word emoji mapping with fuzzy matching
+- lib/plan-storage.ts — localStorage plan save/load/status
+- lib/translations.ts — UI translations (Marathi, Hindi, Urdu, English)
+- lib/maharashtra-data.ts — Districts, corporations, mediums, etc.
+- scripts/generate-flashcards.mjs — Phase 1: Claude batch content generation
+- scripts/generate-images.mjs — Phase 2: DALL-E/Flux image generation
+
+## Current Status
+- Grade 1-3 English available (L1 + L2 for Grade 1-2, L2 only for Grade 3)
+- Grade 4-5 English L2 files exist but content needs verification
+- Quick-plan (1 API call) is the primary planning path
+- Old chat planning exists but link removed from UI
+- Flashcard pipeline scripts ready but not yet run
+- App not yet deployed (runs on localhost)
+
+## Pending Work
+- Run flashcard generation pipeline (scripts/)
+- Build UI to load pre-generated flashcards from JSON
+- Grade 4-5 curriculum content verification
+- Grade 6-8 curriculum data
+- Deploy to Vercel
+- Voice input (v2)
