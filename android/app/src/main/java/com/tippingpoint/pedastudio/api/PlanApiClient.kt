@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
 object PlanApiClient {
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(120, TimeUnit.SECONDS)
+        .readTimeout(180, TimeUnit.SECONDS)
         .writeTimeout(30, TimeUnit.SECONDS)
         .build()
 
@@ -63,8 +63,24 @@ object PlanApiClient {
             requestBuilder.addHeader("Authorization", "Bearer $idToken")
         }
 
+        var lastError: Exception? = null
+        repeat(2) { attempt ->
+            val result = executeGeneratePlan(requestBuilder.build(), base)
+            if (result.isSuccess) return result
+            val error = result.exceptionOrNull() ?: return result
+            lastError = error as? Exception ?: Exception(error.message)
+            if (attempt == 0 && isTransientConnectionError(error.message.orEmpty())) {
+                Thread.sleep(2000)
+                return@repeat
+            }
+            return result
+        }
+        return Result.failure(lastError ?: Exception("Could not generate plan"))
+    }
+
+    private fun executeGeneratePlan(request: Request, base: String): Result<JSONObject> {
         return try {
-            client.newCall(requestBuilder.build()).execute().use { response ->
+            client.newCall(request).execute().use { response ->
                 val text = response.body?.string().orEmpty()
                 if (!response.isSuccessful) {
                     val serverError = runCatching {
@@ -90,31 +106,41 @@ object PlanApiClient {
         } catch (e: Exception) {
             val msg = e.message.orEmpty()
             val friendly = when {
-                msg.contains("upstream connect", ignoreCase = true) ||
-                    msg.contains("connection termination", ignoreCase = true) ||
-                    msg.contains("connection reset", ignoreCase = true) ||
-                    msg.contains("Failed to connect", ignoreCase = true) ||
-                    msg.contains("Unable to resolve host", ignoreCase = true) ||
-                    msg.contains("ECONNREFUSED", ignoreCase = true) ->
-                    buildConnectionHelp(base)
+                isTransientConnectionError(msg) -> buildConnectionHelp(base)
                 else -> msg.ifBlank { "Could not generate plan" }
             }
             Result.failure(Exception(friendly))
         }
     }
 
+    private fun isTransientConnectionError(message: String): Boolean =
+        message.contains("upstream connect", ignoreCase = true) ||
+            message.contains("connection termination", ignoreCase = true) ||
+            message.contains("connection reset", ignoreCase = true) ||
+            message.contains("Failed to connect", ignoreCase = true) ||
+            message.contains("Unable to resolve host", ignoreCase = true) ||
+            message.contains("ECONNREFUSED", ignoreCase = true) ||
+            message.contains("timeout", ignoreCase = true)
+
     private fun buildConnectionHelp(base: String): String {
+        val isProduction = base.contains("hosted.app", ignoreCase = true) ||
+            base.contains("firebaseapp.com", ignoreCase = true)
         val usingEmulatorHost = base.contains("10.0.2.2")
         return buildString {
             append("Cannot reach plan server at $base. ")
-            append("On your PC run: npm run dev (must stay open). ")
-            if (usingEmulatorHost) {
-                append("Emulator: use http://10.0.2.2:3000 (not https). ")
-                append("Physical phone: use http://YOUR_PC_LAN_IP:3000 instead of 10.0.2.2. ")
+            if (isProduction) {
+                append("The cloud API may be restarting — wait 30 seconds and try again. ")
+                append("If it keeps failing, check Firebase Console → App Hosting → pedastudio-api for errors.")
             } else {
-                append("Use http:// not https:// for local dev. ")
+                append("On your PC run: npm run dev (must stay open). ")
+                if (usingEmulatorHost) {
+                    append("Emulator: use http://10.0.2.2:3000 (not https). ")
+                    append("Physical phone: use http://YOUR_PC_LAN_IP:3000 instead of 10.0.2.2. ")
+                } else {
+                    append("Use http:// not https:// for local dev. ")
+                }
+                append("Then rebuild the Android app.")
             }
-            append("Then rebuild the Android app.")
         }
     }
 }

@@ -16,6 +16,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -50,6 +52,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -69,7 +72,6 @@ import com.tippingpoint.pedastudio.data.IndiaStates
 import com.tippingpoint.pedastudio.data.IndianLanguages
 import com.tippingpoint.pedastudio.data.LessonItem
 import com.tippingpoint.pedastudio.data.PlanProgressHelper
-import com.tippingpoint.pedastudio.data.PlanRef
 import com.tippingpoint.pedastudio.data.PlanStorage
 import com.tippingpoint.pedastudio.data.UserPreferences
 import com.tippingpoint.pedastudio.i18n.AppStrings
@@ -114,15 +116,37 @@ fun MainHomeScreen(
     var selectedGrade by remember { mutableIntStateOf(prefs.getTeacherGrades().firstOrNull() ?: 1) }
     var selectedSubject by remember { mutableStateOf(prefs.getTeacherSubjects().firstOrNull() ?: "english") }
     var pickCurrent by remember { mutableStateOf(false) }
+    var currentLessonId by remember { mutableStateOf("") }
 
     val lessons = remember(selectedGrade, selectedSubject, prefs.medium) {
         curriculum.getLessons(selectedGrade, selectedSubject, prefs.medium)
     }
     val available = curriculum.isAvailable(selectedGrade, selectedSubject)
-    val currentId = prefs.getCurrentLesson(selectedGrade, selectedSubject)
-    val currentLesson = lessons.find { it.id == currentId }
-    val currentIndex = lessons.indexOfFirst { it.id == currentId }
+
+    LaunchedEffect(selectedGrade, selectedSubject) {
+        prefs.lastViewedGrade = selectedGrade
+        prefs.lastViewedSubject = selectedSubject
+    }
+
+    LaunchedEffect(selectedGrade, selectedSubject, lessons, plansRevision) {
+        val stored = prefs.getCurrentLesson(selectedGrade, selectedSubject)
+        val resolved = PlanProgressHelper.resolveCurrentLessonId(lessons, stored, planStorage)
+        currentLessonId = resolved
+        if (resolved.isNotBlank() && resolved != stored) {
+            prefs.setCurrentLesson(selectedGrade, selectedSubject, resolved)
+            if (stored.isNotBlank()) onLessonSelected()
+        }
+    }
+
+    val currentLesson = lessons.find { it.id == currentLessonId }
+    val currentIndex = lessons.indexOfFirst { it.id == currentLessonId }
     val nextLesson = if (currentIndex >= 0 && currentIndex + 1 < lessons.size) lessons[currentIndex + 1] else null
+    val nextPlanDay = currentLesson?.let {
+        PlanProgressHelper.getFirstUnplannedDay(it.id, it.days, planStorage)
+    }
+    val viewPlanDay = currentLesson?.let {
+        PlanProgressHelper.getActivePlanDay(it.id, it.days, planStorage)
+    }
     val lang = LocalAppLanguage.current
     val s = LocalAppStrings.current
     val teacherFallback = when (lang) {
@@ -160,9 +184,9 @@ fun MainHomeScreen(
                 modifier = Modifier.navigationBarsPadding(),
                 containerColor = Color.White,
             ) {
-                NavigationBarItem(selected = tab == HomeTab.HOME, onClick = { tab = HomeTab.HOME }, icon = { Icon(Icons.Default.Home, null) }, label = { Text(s.navHome, fontSize = 11.sp) })
+                NavigationBarItem(selected = tab == HomeTab.HOME, onClick = { pickCurrent = false; tab = HomeTab.HOME }, icon = { Icon(Icons.Default.Home, null) }, label = { Text(s.navHome, fontSize = 11.sp) })
                 NavigationBarItem(selected = tab == HomeTab.ROADMAP, onClick = { tab = HomeTab.ROADMAP }, icon = { Icon(Icons.Default.List, null) }, label = { Text(s.navRoadmap, fontSize = 11.sp) })
-                NavigationBarItem(selected = tab == HomeTab.PROFILE, onClick = { tab = HomeTab.PROFILE }, icon = { Icon(Icons.Default.Person, null) }, label = { Text(s.navProfile, fontSize = 11.sp) })
+                NavigationBarItem(selected = tab == HomeTab.PROFILE, onClick = { pickCurrent = false; tab = HomeTab.PROFILE }, icon = { Icon(Icons.Default.Person, null) }, label = { Text(s.navProfile, fontSize = 11.sp) })
             }
         },
     ) { padding ->
@@ -173,8 +197,14 @@ fun MainHomeScreen(
                     subjects = prefs.getTeacherSubjects(),
                     selectedGrade = selectedGrade,
                     selectedSubject = selectedSubject,
-                    onGrade = { selectedGrade = it },
-                    onSubject = { selectedSubject = it },
+                    onGrade = {
+                        selectedGrade = it
+                        currentLessonId = ""
+                    },
+                    onSubject = {
+                        selectedSubject = it
+                        currentLessonId = ""
+                    },
                 )
             }
 
@@ -184,12 +214,10 @@ fun MainHomeScreen(
                     available = available,
                     currentLesson = currentLesson,
                     nextLesson = nextLesson,
-                    lang = lang,
+                    nextPlanDay = nextPlanDay,
+                    viewPlanDay = viewPlanDay,
                     planStorage = planStorage,
-                    savedPlanDay = remember(plansRevision, currentLesson) {
-                        currentLesson?.let { planStorage.firstSavedDay(it.id, it.days) }
-                    },
-                    recentPlans = remember(plansRevision) { planStorage.listLocalPlans().take(5) },
+                    plansRevision = plansRevision,
                     onPickLesson = { tab = HomeTab.ROADMAP; pickCurrent = true },
                     onQuickPlan = { id, day -> onQuickPlan(id, day) },
                     onFlashcards = { id -> onFlashcards(id) },
@@ -200,12 +228,12 @@ fun MainHomeScreen(
                     s = s,
                     lessons = lessons,
                     available = available,
-                    currentId = currentId,
+                    currentId = currentLesson?.id ?: currentLessonId,
                     pickCurrent = pickCurrent,
-                    lang = lang,
                     planStorage = planStorage,
                     plansRevision = plansRevision,
                     onSelectCurrent = { id ->
+                        currentLessonId = id
                         prefs.setCurrentLesson(selectedGrade, selectedSubject, id)
                         pickCurrent = false
                         tab = HomeTab.HOME
@@ -274,21 +302,23 @@ private fun HomeTabContent(
     available: Boolean,
     currentLesson: LessonItem?,
     nextLesson: LessonItem?,
-    lang: String,
+    nextPlanDay: Int?,
+    viewPlanDay: Int?,
     planStorage: PlanStorage,
-    savedPlanDay: Int?,
-    recentPlans: List<PlanRef>,
+    plansRevision: Int,
     onPickLesson: () -> Unit,
     onQuickPlan: (String, Int) -> Unit,
     onFlashcards: (String) -> Unit,
     onViewPlan: (String, Int) -> Unit,
     onOpenLesson: (String) -> Unit,
 ) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(NavBg)
-            .padding(16.dp),
+            .verticalScroll(scrollState)
+            .padding(horizontal = 16.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         if (!available) {
@@ -299,22 +329,28 @@ private fun HomeTabContent(
         } else {
             HighlightLessonCard(
                 label = s.current,
-                title = currentLesson.title(lang),
-                subtitle = "${currentLesson.id} · ${currentLesson.en}",
+                title = currentLesson.curriculumTitle,
+                subtitle = buildString {
+                    append(currentLesson.id)
+                    nextPlanDay?.let { append(" · ${s.planDayBtn} $it") }
+                },
                 meta = "${s.unitLabel} ${currentLesson.unit} · ${s.pagesLabel} ${currentLesson.pages} · ${currentLesson.days} ${s.daysLabel}",
                 highlight = true,
             )
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                PrimaryButton(
-                    text = s.planLesson,
-                    onClick = {
-                        val day = currentLesson.let {
-                            PlanProgressHelper.getFirstUnplannedDay(it.id, it.days, planStorage) ?: 1
-                        }
-                        onQuickPlan(currentLesson.id, day)
-                    },
-                    modifier = Modifier.weight(1f),
-                )
+                if (nextPlanDay != null) {
+                    PrimaryButton(
+                        text = "${s.planDayBtn} ${nextPlanDay}",
+                        onClick = { onQuickPlan(currentLesson.id, nextPlanDay) },
+                        modifier = Modifier.weight(1f),
+                    )
+                } else {
+                    PrimaryButton(
+                        text = s.viewLessonProgress,
+                        onClick = { onOpenLesson(currentLesson.id) },
+                        modifier = Modifier.weight(1f),
+                    )
+                }
                 Button(
                     onClick = { onFlashcards(currentLesson.id) },
                     modifier = Modifier.weight(1f),
@@ -324,47 +360,33 @@ private fun HomeTabContent(
                     Text(s.flashcardsBtn, fontSize = 13.sp, fontWeight = FontWeight.SemiBold)
                 }
             }
-            if (savedPlanDay != null) {
-                TextButton(onClick = { onViewPlan(currentLesson.id, savedPlanDay) }, modifier = Modifier.fillMaxWidth()) {
-                    Text(s.viewPlan, color = AccentTeal, fontWeight = FontWeight.Medium)
+            if (viewPlanDay != null) {
+                TextButton(onClick = { onViewPlan(currentLesson.id, viewPlanDay) }, modifier = Modifier.fillMaxWidth()) {
+                    Text("${s.viewPlan} · ${s.dayLabel} $viewPlanDay", color = AccentTeal, fontWeight = FontWeight.Medium)
                 }
             }
-            TextButton(onClick = { onOpenLesson(currentLesson.id) }, modifier = Modifier.fillMaxWidth()) {
-                Text(s.viewLessonProgress, color = AccentTeal, fontWeight = FontWeight.Medium)
-            }
-            if (recentPlans.isNotEmpty()) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    border = BorderStroke(1.dp, SeasideBorder),
-                ) {
-                    Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                        Text(s.myPlans, fontWeight = FontWeight.SemiBold, color = PrimarySteel, fontSize = 14.sp)
-                        recentPlans.forEach { ref ->
-                            TextButton(
-                                onClick = { onViewPlan(ref.lessonId, ref.day) },
-                                modifier = Modifier.fillMaxWidth(),
-                            ) {
-                                Text(
-                                    "${ref.lessonId} · ${s.dayLabel} ${ref.day}",
-                                    color = PrimaryDark,
-                                    fontSize = 13.sp,
-                                    modifier = Modifier.fillMaxWidth(),
-                                )
-                            }
-                        }
-                    }
+            if (nextPlanDay != null) {
+                TextButton(onClick = { onOpenLesson(currentLesson.id) }, modifier = Modifier.fillMaxWidth()) {
+                    Text(s.viewLessonProgress, color = AccentTeal, fontWeight = FontWeight.Medium)
                 }
             }
             nextLesson?.let {
+                val upNextDay = PlanProgressHelper.getFirstUnplannedDay(it.id, it.days, planStorage)
+                Spacer(Modifier.height(4.dp))
+                HorizontalDivider(color = SeasideBorder, thickness = 1.dp)
+                Spacer(Modifier.height(4.dp))
                 HighlightLessonCard(
                     label = s.upNext,
-                    title = it.title(lang),
-                    subtitle = "${it.id} · ${it.en}",
+                    title = it.curriculumTitle,
+                    subtitle = buildString {
+                        append(it.id)
+                        if (upNextDay != null) append(" · ${s.planDayBtn} $upNextDay")
+                    },
                     meta = "${s.unitLabel} ${it.unit} · ${s.pagesLabel} ${it.pages} · ${it.days} ${s.daysLabel}",
                     highlight = false,
+                    modifier = Modifier.fillMaxWidth(),
                 )
+                Spacer(Modifier.height(8.dp))
             }
         }
     }
@@ -377,7 +399,6 @@ private fun RoadmapTabContent(
     available: Boolean,
     currentId: String,
     pickCurrent: Boolean,
-    lang: String,
     planStorage: PlanStorage,
     plansRevision: Int,
     onSelectCurrent: (String) -> Unit,
@@ -426,14 +447,14 @@ private fun RoadmapTabContent(
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Text(lesson.title(lang), fontWeight = FontWeight.Bold, fontSize = 15.sp, color = if (selected) androidx.compose.ui.graphics.Color.White else PrimaryDark, modifier = Modifier.weight(1f))
+                            Text(lesson.curriculumTitle, fontWeight = FontWeight.Bold, fontSize = 15.sp, color = if (selected) androidx.compose.ui.graphics.Color.White else PrimaryDark, modifier = Modifier.weight(1f))
                             Text(
                                 PlanProgressHelper.lessonStatusIcon(lessonStatus),
                                 fontSize = 16.sp,
                                 color = if (selected) androidx.compose.ui.graphics.Color.White else PrimaryDark,
                             )
                         }
-                        Text("${lesson.id} · ${lesson.en}", fontSize = 12.sp, color = if (selected) androidx.compose.ui.graphics.Color.White.copy(0.85f) else PrimaryDark.copy(0.55f))
+                        Text(lesson.id, fontSize = 12.sp, color = if (selected) androidx.compose.ui.graphics.Color.White.copy(0.85f) else PrimaryDark.copy(0.55f))
                         Text("${s.unitLabel} ${lesson.unit} · ${s.pagesLabel} ${lesson.pages} · ${lesson.days} ${s.daysLabel}", fontSize = 11.sp, color = if (selected) androidx.compose.ui.graphics.Color.White.copy(0.7f) else PrimaryDark.copy(0.4f))
                     }
                 }

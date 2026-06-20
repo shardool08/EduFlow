@@ -6,9 +6,9 @@
 # PedaStudio web API for quick-plan (required for "Plan this lesson")
 # Debug builds use local.properties; release builds use gradle.properties production URL.
 #
-# Emulator → local Next.js dev server:
-# pedastudio.api.url=http://10.0.2.2:3000
+# Production (default — works from anywhere):
+pedastudio.api.url=https://pedastudio-api--pedastudio-d6b2a.asia-southeast1.hosted.app
 #
-# Physical device on same Wi-Fi:
+# Local dev — uncomment instead:
+# pedastudio.api.url=http://10.0.2.2:3000
 # pedastudio.api.url=http://192.168.x.x:3000
-pedastudio.api.url=

@@ -18,9 +18,6 @@
     "firebase:deploy-api": "firebase deploy --only \"apphosting:pedastudio-api\" --project pedastudio-d6b2a"
   },
   "dependencies": {
-    "@supabase/ssr": "^0.10.3",
-    "@supabase/supabase-js": "^2.107.0",
-    "firebase": "^12.14.0",
     "firebase-admin": "^13.10.0",
     "next": "15.5.7",
     "react": "19.0.1",

@@ -50,6 +50,7 @@ data class NextPlanAction(
 
 object PlanProgressHelper {
     fun getLessonStatus(lessonId: String, totalDays: Int, planStorage: PlanStorage): LessonProgressStatus {
+        if (totalDays <= 0) return LessonProgressStatus.NOT_STARTED
         var hasPlanned = false
         var hasCompleted = false
         var allCompleted = totalDays > 0
@@ -74,6 +75,69 @@ object PlanProgressHelper {
             if (planStorage.getDayMeta(lessonId, d).status == DayPlanStatus.NOT_STARTED) return d
         }
         return null
+    }
+
+    fun getFirstPlannedDay(lessonId: String, totalDays: Int, planStorage: PlanStorage): Int? {
+        for (d in 1..totalDays) {
+            val status = planStorage.getDayMeta(lessonId, d).status
+            if (status == DayPlanStatus.PLANNED || status == DayPlanStatus.COMPLETED) return d
+        }
+        return null
+    }
+
+    /**
+     * Day whose saved plan the teacher most likely wants to open now — not always Day 1.
+     * Uses last edited plan, else the latest planned day before the next unplanned day.
+     */
+    fun getActivePlanDay(lessonId: String, totalDays: Int, planStorage: PlanStorage): Int? {
+        planStorage.getLastPlan()?.let { (id, day) ->
+            if (id == lessonId && day in 1..totalDays && planStorage.hasPlan(lessonId, day)) {
+                return day
+            }
+        }
+        val nextUnplanned = getFirstUnplannedDay(lessonId, totalDays, planStorage)
+        val lastPlannedBeforeNext = (nextUnplanned ?: (totalDays + 1)) - 1
+        if (lastPlannedBeforeNext >= 1) {
+            for (d in lastPlannedBeforeNext downTo 1) {
+                if (planStorage.hasPlan(lessonId, d)) return d
+            }
+        }
+        for (d in 1..totalDays) {
+            if (planStorage.getDayMeta(lessonId, d).status == DayPlanStatus.PLANNED) return d
+        }
+        return null
+    }
+
+    fun nextLessonInCurriculum(lessons: List<LessonItem>, lessonId: String): LessonItem? {
+        val index = lessons.indexOfFirst { it.id == lessonId }
+        if (index < 0 || index + 1 >= lessons.size) return null
+        return lessons[index + 1]
+    }
+
+    /**
+     * Picks the active lesson for home/roadmap: keeps manual selection until that lesson is
+     * fully completed, then advances to the next textbook lesson.
+     */
+    fun resolveCurrentLessonId(
+        lessons: List<LessonItem>,
+        storedLessonId: String,
+        planStorage: PlanStorage,
+    ): String {
+        if (lessons.isEmpty()) return ""
+
+        val stored = lessons.find { it.id == storedLessonId }
+        if (storedLessonId.isNotBlank() && stored != null) {
+            val status = getLessonStatus(storedLessonId, stored.days, planStorage)
+            if (status != LessonProgressStatus.COMPLETED) return storedLessonId
+            nextLessonInCurriculum(lessons, storedLessonId)?.let { return it.id }
+            return storedLessonId
+        }
+
+        lessons.firstOrNull { lesson ->
+            getLessonStatus(lesson.id, lesson.days, planStorage) != LessonProgressStatus.COMPLETED
+        }?.let { return it.id }
+
+        return lessons.first().id
     }
 
     fun getNextAction(

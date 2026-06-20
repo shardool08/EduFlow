@@ -1,12 +1,14 @@
 package com.tippingpoint.pedastudio.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -25,6 +27,7 @@ import com.tippingpoint.pedastudio.data.LessonItem
 import com.tippingpoint.pedastudio.data.PlanStorage
 import com.tippingpoint.pedastudio.data.TlmResourceCatalog
 import com.tippingpoint.pedastudio.data.UserPreferences
+import com.tippingpoint.pedastudio.i18n.GeneratingQuotes
 import com.tippingpoint.pedastudio.i18n.LocalAppLanguage
 import com.tippingpoint.pedastudio.i18n.LocalAppStrings
 import com.tippingpoint.pedastudio.ui.components.ChipMultiSelect
@@ -32,12 +35,14 @@ import com.tippingpoint.pedastudio.ui.components.ChipSingleSelect
 import com.tippingpoint.pedastudio.ui.components.FormSectionCard
 import com.tippingpoint.pedastudio.ui.components.InfoBannerCard
 import com.tippingpoint.pedastudio.ui.components.OutlinedFormField
+import com.tippingpoint.pedastudio.ui.components.PlanGeneratingOverlay
 import com.tippingpoint.pedastudio.ui.components.RegisterScaffold
-import com.tippingpoint.pedastudio.ui.theme.AccentTeal
 import com.tippingpoint.pedastudio.ui.theme.PrimarySteel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.random.Random
 
 @Composable
 fun QuickPlanScreen(
@@ -66,14 +71,22 @@ fun QuickPlanScreen(
     }
 
     if (lesson == null) {
-        Column(Modifier.padding(24.dp)) {
-            InfoBannerCard(title = s.quickPlanTitle, body = "Lesson not found.")
+        RegisterScaffold(
+            title = s.quickPlanTitle,
+            stepLabel = lessonId,
+            buttonText = s.closeBtn,
+            canContinue = true,
+            onBack = onBack,
+            onContinue = onBack,
+        ) {
+            InfoBannerCard(title = s.quickPlanTitle, body = s.lessonNotFound)
         }
         return
     }
 
-    var day by remember(initialDay) { mutableIntStateOf(initialDay) }
-    var goal by remember(initialDay) { mutableStateOf(lesson.dayFocus(initialDay)?.focus ?: "") }
+    val safeInitialDay = initialDay.coerceIn(1, lesson.days)
+    var day by remember(safeInitialDay) { mutableIntStateOf(safeInitialDay) }
+    var goal by remember(safeInitialDay) { mutableStateOf(lesson.dayFocus(safeInitialDay)?.focus ?: "") }
     var hook by remember { mutableStateOf("") }
     var teaching by remember { mutableStateOf("") }
     var practice by remember { mutableStateOf("") }
@@ -85,12 +98,43 @@ fun QuickPlanScreen(
         )
     }
     var error by remember { mutableStateOf("") }
-    var loading by remember { mutableStateOf(false) }
+    var generating by remember { mutableStateOf(false) }
+    var progress by remember { mutableIntStateOf(0) }
+    var quote by remember { mutableStateOf(GeneratingQuotes.randomQuote(lang)) }
 
     val dayOptions = (1..lesson.days).map { it.toString() to "${s.dayLabel} $it" }
     val hookOptions = QuickPlanOptions.hooksFor(lesson.type).map { it to it }
     val tlmOptions = remember(tlmCatalog) {
         tlmCatalog.all().map { it.id to "${it.emoji} ${it.label}" }
+    }
+
+    val statusLabel = when {
+        progress >= 100 -> s.generatingStatusDone
+        progress >= 75 -> s.generatingStatusAlmost
+        progress >= 45 -> s.generatingStatusTlm
+        progress >= 15 -> s.generatingStatusBuilding
+        else -> s.generatingStatusReading
+    }
+
+    LaunchedEffect(generating) {
+        if (!generating) {
+            progress = 0
+            return@LaunchedEffect
+        }
+        quote = GeneratingQuotes.randomQuote(lang)
+        progress = 0
+        while (generating && progress < 92) {
+            delay(320L + Random.nextLong(180))
+            progress = (progress + when {
+                progress < 25 -> 4
+                progress < 55 -> 3
+                progress < 80 -> 2
+                else -> 1
+            }).coerceAtMost(92)
+            if (progress > 0 && progress % 22 == 0) {
+                quote = GeneratingQuotes.randomQuote(lang)
+            }
+        }
     }
 
     fun onDayChange(d: String) {
@@ -101,104 +145,115 @@ fun QuickPlanScreen(
 
     fun tlmLabels(): String = selectedTlms.map { tlmCatalog.labelFor(it) }.joinToString(", ")
 
-    RegisterScaffold(
-        title = s.quickPlanTitle,
-        stepLabel = "${lesson.id} · ${lesson.title(lang)}",
-        buttonText = if (loading) s.generatingPlan else s.generatePlan,
-        canContinue = !loading &&
-            selectedTlms.isNotEmpty() &&
-            hook.isNotBlank() &&
-            teaching.isNotBlank() &&
-            practice.isNotBlank() &&
-            assessment.isNotBlank() &&
-            PlanApiClient.isConfigured,
-        onBack = onBack,
-        onContinue = {
-            if (!PlanApiClient.isConfigured) {
-                error = s.apiNotConfigured
-                return@RegisterScaffold
-            }
-            loading = true
-            error = ""
-            scope.launch {
-                val selections = mapOf(
-                    "goal" to goal,
-                    "hook" to hook,
-                    "tlms" to tlmLabels(),
-                    "teaching" to teaching,
-                    "practice" to practice,
-                    "assessment" to assessment,
-                    "notes" to notes,
-                )
-                val result = withContext(Dispatchers.IO) {
-                    val idToken = auth.getIdToken()
-                    PlanApiClient.generatePlan(lesson, day, lesson.dayFocus(day), selections, prefs, idToken)
+    Box(Modifier.fillMaxSize()) {
+        RegisterScaffold(
+            title = s.quickPlanTitle,
+            stepLabel = "${lesson.id} · ${lesson.curriculumTitle}",
+            buttonText = if (generating) s.generatingPlan else s.generatePlan,
+            canContinue = !generating &&
+                selectedTlms.isNotEmpty() &&
+                hook.isNotBlank() &&
+                teaching.isNotBlank() &&
+                practice.isNotBlank() &&
+                assessment.isNotBlank() &&
+                PlanApiClient.isConfigured,
+            onBack = if (generating) null else onBack,
+            onContinue = {
+                if (!PlanApiClient.isConfigured) {
+                    error = s.apiNotConfigured
+                    return@RegisterScaffold
                 }
-                loading = false
-                result.fold(
-                    onSuccess = { plan ->
-                        val planJson = plan.toString()
-                        planStorage.savePlan(lesson.id, day, planJson, selections)
-                        firestore.pushPlan(lesson.id, day, planJson, selections, planStorage)
-                        onPlanReady(lesson.id, day)
-                    },
-                    onFailure = { e ->
-                        error = e.message ?: s.planError
+                generating = true
+                error = ""
+                scope.launch {
+                    val selections = mapOf(
+                        "goal" to goal,
+                        "hook" to hook,
+                        "tlms" to tlmLabels(),
+                        "teaching" to teaching,
+                        "practice" to practice,
+                        "assessment" to assessment,
+                        "notes" to notes,
+                    )
+                    val result = withContext(Dispatchers.IO) {
+                        val idToken = auth.getIdToken()
+                        PlanApiClient.generatePlan(lesson, day, lesson.dayFocus(day), selections, prefs, idToken)
+                    }
+                    result.fold(
+                        onSuccess = { plan ->
+                            progress = 100
+                            quote = GeneratingQuotes.randomQuote(lang)
+                            delay(700)
+                            val planJson = plan.toString()
+                            planStorage.savePlan(lesson.id, day, planJson, selections)
+                            firestore.pushPlan(lesson.id, day, planJson, selections, planStorage)
+                            generating = false
+                            onPlanReady(lesson.id, day)
+                        },
+                        onFailure = { e ->
+                            generating = false
+                            error = e.message ?: s.planError
+                        },
+                    )
+                }
+            },
+        ) {
+            if (!PlanApiClient.isConfigured) {
+                Text(s.apiNotConfigured, color = Color.Red.copy(0.8f), fontSize = 13.sp, modifier = Modifier.padding(bottom = 8.dp))
+            }
+
+            LessonHeaderCard(lesson, s)
+
+            FormSectionCard(title = s.dayLabel, subtitle = null) {
+                ChipSingleSelect(label = s.dayLabel, options = dayOptions, selected = day.toString(), onSelect = ::onDayChange)
+                OutlinedFormField(value = goal, onValueChange = { goal = it }, label = s.goalLabel, singleLine = false)
+            }
+
+            FormSectionCard(title = s.teachingMaterials, subtitle = s.classroomResourcesSub) {
+                ChipMultiSelect(
+                    label = s.teachingMaterials,
+                    options = tlmOptions,
+                    selected = selectedTlms,
+                    onToggle = { id ->
+                        selectedTlms = if (id in selectedTlms) selectedTlms - id else selectedTlms + id
                     },
                 )
             }
-        },
-    ) {
-        if (!PlanApiClient.isConfigured) {
-            Text(s.apiNotConfigured, color = Color.Red.copy(0.8f), fontSize = 13.sp, modifier = Modifier.padding(bottom = 8.dp))
+
+            FormSectionCard(title = s.hookLabel, subtitle = null) {
+                ChipSingleSelect(label = s.hookLabel, options = hookOptions, selected = hook, onSelect = { hook = it })
+            }
+            FormSectionCard(title = s.teachingLabel, subtitle = null) {
+                ChipSingleSelect(label = s.teachingLabel, options = QuickPlanOptions.teaching.map { it to it }, selected = teaching, onSelect = { teaching = it })
+            }
+            FormSectionCard(title = s.practiceLabel, subtitle = null) {
+                ChipSingleSelect(label = s.practiceLabel, options = QuickPlanOptions.practice.map { it to it }, selected = practice, onSelect = { practice = it })
+            }
+            FormSectionCard(title = s.assessmentLabel, subtitle = null) {
+                ChipSingleSelect(label = s.assessmentLabel, options = QuickPlanOptions.assessment.map { it to it }, selected = assessment, onSelect = { assessment = it })
+            }
+            FormSectionCard(title = s.notesLabel, subtitle = null) {
+                OutlinedFormField(value = notes, onValueChange = { notes = it }, label = s.notesLabel, singleLine = false)
+            }
+
+            if (error.isNotBlank()) {
+                Text(error, color = Color.Red, fontSize = 13.sp)
+            }
         }
 
-        LessonHeaderCard(lesson, lang, s)
-
-        FormSectionCard(title = s.dayLabel, subtitle = null) {
-            ChipSingleSelect(label = s.dayLabel, options = dayOptions, selected = day.toString(), onSelect = ::onDayChange)
-            OutlinedFormField(value = goal, onValueChange = { goal = it }, label = s.goalLabel, singleLine = false)
-        }
-
-        FormSectionCard(title = s.teachingMaterials, subtitle = s.classroomResourcesSub) {
-            ChipMultiSelect(
-                label = s.teachingMaterials,
-                options = tlmOptions,
-                selected = selectedTlms,
-                onToggle = { id ->
-                    selectedTlms = if (id in selectedTlms) selectedTlms - id else selectedTlms + id
-                },
+        if (generating) {
+            PlanGeneratingOverlay(
+                progress = progress,
+                quote = quote,
+                statusLabel = statusLabel,
             )
-        }
-
-        FormSectionCard(title = s.hookLabel, subtitle = null) {
-            ChipSingleSelect(label = s.hookLabel, options = hookOptions, selected = hook, onSelect = { hook = it })
-        }
-        FormSectionCard(title = s.teachingLabel, subtitle = null) {
-            ChipSingleSelect(label = s.teachingLabel, options = QuickPlanOptions.teaching.map { it to it }, selected = teaching, onSelect = { teaching = it })
-        }
-        FormSectionCard(title = s.practiceLabel, subtitle = null) {
-            ChipSingleSelect(label = s.practiceLabel, options = QuickPlanOptions.practice.map { it to it }, selected = practice, onSelect = { practice = it })
-        }
-        FormSectionCard(title = s.assessmentLabel, subtitle = null) {
-            ChipSingleSelect(label = s.assessmentLabel, options = QuickPlanOptions.assessment.map { it to it }, selected = assessment, onSelect = { assessment = it })
-        }
-        FormSectionCard(title = s.notesLabel, subtitle = null) {
-            OutlinedFormField(value = notes, onValueChange = { notes = it }, label = s.notesLabel, singleLine = false)
-        }
-
-        if (loading) {
-            CircularProgressIndicator(color = AccentTeal, modifier = Modifier.fillMaxWidth().padding(16.dp))
-        }
-        if (error.isNotBlank()) {
-            Text(error, color = Color.Red, fontSize = 13.sp)
         }
     }
 }
 
 @Composable
-private fun LessonHeaderCard(lesson: LessonItem, lang: String, s: com.tippingpoint.pedastudio.i18n.AppStrings) {
-    FormSectionCard(title = lesson.title(lang), subtitle = lesson.en) {
+private fun LessonHeaderCard(lesson: LessonItem, s: com.tippingpoint.pedastudio.i18n.AppStrings) {
+    FormSectionCard(title = lesson.curriculumTitle, subtitle = lesson.id) {
         Text(
             text = "${s.unitLabel} ${lesson.unit} · ${s.pagesLabel} ${lesson.pages} · ${lesson.days} ${s.daysLabel}",
             fontSize = 13.sp,

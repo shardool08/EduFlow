@@ -7,8 +7,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 
-val LocalAppStrings = compositionLocalOf { Translations.EN }
-val LocalAppLanguage = compositionLocalOf { "en" }
+val LocalAppStrings = compositionLocalOf<AppStrings> { Translations.EN }
+val LocalAppLanguage = compositionLocalOf<String> { "en" }
 
 @Composable
 fun AppLanguageProvider(

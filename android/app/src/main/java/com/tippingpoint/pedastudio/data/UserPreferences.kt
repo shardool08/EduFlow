@@ -102,6 +102,14 @@ class UserPreferences(context: Context) {
             .apply()
     }
 
+    var lastViewedGrade: Int
+        get() = prefs.getInt("lastViewedGrade", getTeacherGrades().firstOrNull() ?: 1)
+        set(value) = prefs.edit().putInt("lastViewedGrade", value).apply()
+
+    var lastViewedSubject: String
+        get() = prefs.getString("lastViewedSubject", getTeacherSubjects().firstOrNull() ?: "english") ?: "english"
+        set(value) = prefs.edit().putString("lastViewedSubject", value).apply()
+
     fun clearSession() {
         prefs.edit().clear().apply()
     }

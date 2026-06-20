@@ -26,6 +26,9 @@ data class LessonItem(
         else -> en
     }
 
+    /** Textbook lesson title — always English; does not follow app UI language. */
+    val curriculumTitle: String get() = en
+
     fun dayFocus(day: Int): DayInfo? = bloomsProgression.find { it.day == day }
 }
 

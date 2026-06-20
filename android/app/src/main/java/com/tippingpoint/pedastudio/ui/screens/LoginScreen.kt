@@ -58,7 +58,8 @@ fun LoginScreen(
 
     LaunchedEffect(auth.isLoggedIn, state) {
         if (auth.isLoggedIn && state !is LoginUiState.Verifying && state !is LoginUiState.Sending) {
-            onSuccess(phone)
+            val digits = phone.filter { it.isDigit() }.takeLast(10)
+            onSuccess(if (digits.length >= 10) digits else "verified")
         }
     }
 

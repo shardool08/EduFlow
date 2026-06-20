@@ -38,8 +38,8 @@ import com.tippingpoint.pedastudio.data.NextPlanAction
 import com.tippingpoint.pedastudio.data.PlanFeedback
 import com.tippingpoint.pedastudio.data.PlanProgressHelper
 import com.tippingpoint.pedastudio.data.PlanStorage
+import com.tippingpoint.pedastudio.data.UserPreferences
 import com.tippingpoint.pedastudio.i18n.AppStrings
-import com.tippingpoint.pedastudio.i18n.LocalAppLanguage
 import com.tippingpoint.pedastudio.i18n.LocalAppStrings
 import com.tippingpoint.pedastudio.ui.components.InfoBannerCard
 import com.tippingpoint.pedastudio.ui.components.PrimaryButton
@@ -58,6 +58,7 @@ import java.util.Date
 @Composable
 fun LessonDetailScreen(
     lessonId: String,
+    prefs: UserPreferences,
     curriculum: CurriculumRepository,
     planStorage: PlanStorage,
     firestore: FirestoreRepository,
@@ -68,9 +69,18 @@ fun LessonDetailScreen(
     onProgressChanged: () -> Unit,
 ) {
     val s = LocalAppStrings.current
-    val lang = LocalAppLanguage.current
     val scope = rememberCoroutineScope()
     val lesson = remember(lessonId) { curriculum.findLessonAnywhere(lessonId) }
+    val roadmapLessons = remember(prefs.lastViewedGrade, prefs.lastViewedSubject, prefs.medium) {
+        curriculum.getLessons(prefs.lastViewedGrade, prefs.lastViewedSubject, prefs.medium)
+    }
+
+    fun advanceToNextLesson() {
+        PlanProgressHelper.nextLessonInCurriculum(roadmapLessons, lessonId)?.let { next ->
+            prefs.setCurrentLesson(prefs.lastViewedGrade, prefs.lastViewedSubject, next.id)
+            scope.launch { firestore.pushProfile(prefs) }
+        }
+    }
     var refreshKey by remember { mutableStateOf(0) }
     var feedbackDay by remember { mutableStateOf<Int?>(null) }
     var nextAction by remember { mutableStateOf<NextPlanAction?>(null) }
@@ -118,7 +128,7 @@ fun LessonDetailScreen(
 
     RegisterScaffold(
         title = s.lessonProgressTitle,
-        stepLabel = "${lesson.id} · ${lesson.title(lang)}",
+        stepLabel = "${lesson.id} · ${lesson.curriculumTitle}",
         buttonText = s.continueBtn,
         canContinue = true,
         onBack = onBack,
@@ -152,12 +162,15 @@ fun LessonDetailScreen(
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                             Button(
                                 onClick = {
-                                    if (action.action == "next_lesson") {
-                                        nextAction = null
-                                        onBack()
-                                    } else {
-                                        nextAction = null
-                                        onQuickPlan(action.lessonId, action.day)
+                                    nextAction = null
+                                    when (action.action) {
+                                        "next_lesson" -> {
+                                            advanceToNextLesson()
+                                            onProgressChanged()
+                                            onBack()
+                                        }
+                                        "continue" -> onViewPlan(action.lessonId, action.day)
+                                        else -> onQuickPlan(action.lessonId, action.day)
                                     }
                                 },
                                 modifier = Modifier.weight(1f),

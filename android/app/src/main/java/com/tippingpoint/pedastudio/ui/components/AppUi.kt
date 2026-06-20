@@ -33,6 +33,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -242,7 +243,7 @@ fun HighlightLessonCard(
     Card(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = if (highlight) WarmPeach else Color.White),
+        colors = CardDefaults.cardColors(containerColor = if (highlight) WarmPeach else BgTint),
         border = BorderStroke(1.dp, SeasideBorder),
         elevation = CardDefaults.cardElevation(defaultElevation = if (highlight) 0.dp else 1.dp),
     ) {
@@ -393,5 +394,60 @@ fun profileInitials(name: String): String {
         parts.isEmpty() -> "?"
         parts.size == 1 -> parts[0].take(2).uppercase()
         else -> "${parts.first().first()}${parts.last().first()}".uppercase()
+    }
+}
+
+@Composable
+fun PlanGeneratingOverlay(
+    progress: Int,
+    quote: String,
+    statusLabel: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White.copy(alpha = 0.96f)),
+        contentAlignment = Alignment.Center,
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(20.dp),
+        ) {
+            Text(
+                text = "$progress%",
+                fontSize = 48.sp,
+                fontWeight = FontWeight.Bold,
+                color = AccentTeal,
+            )
+            LinearProgressIndicator(
+                progress = { progress.coerceIn(0, 100) / 100f },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                color = AccentTeal,
+                trackColor = SeasideBorder,
+            )
+            Text(
+                text = statusLabel,
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Medium,
+                color = PrimarySteel.copy(0.75f),
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                text = "\"$quote\"",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Normal,
+                color = PrimaryDark.copy(0.85f),
+                textAlign = TextAlign.Center,
+                lineHeight = 24.sp,
+                modifier = Modifier.padding(top = 8.dp),
+            )
+        }
     }
 }

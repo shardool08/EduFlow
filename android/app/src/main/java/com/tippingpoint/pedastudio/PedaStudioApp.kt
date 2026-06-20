@@ -174,7 +174,12 @@ fun PedaStudioApp(auth: PhoneAuthController) {
                     navArgument("day") { type = NavType.IntType; defaultValue = 1 },
                 ),
             ) { entry ->
-                val lessonId = Routes.decodeLessonId(entry.arguments?.getString("lessonId")) ?: return@composable
+                val rawId = entry.arguments?.getString("lessonId")
+                val lessonId = rawId?.let { Routes.decodeLessonId(it) }
+                if (lessonId.isNullOrBlank()) {
+                    LaunchedEffect(Unit) { nav.popBackStack() }
+                    return@composable
+                }
                 val day = entry.arguments?.getInt("day") ?: 1
                 QuickPlanScreen(
                     lessonId = lessonId,
@@ -187,6 +192,7 @@ fun PedaStudioApp(auth: PhoneAuthController) {
                     auth = auth,
                     onBack = { nav.popBackStack() },
                     onPlanReady = { id, readyDay ->
+                        prefs.setCurrentLesson(prefs.lastViewedGrade, prefs.lastViewedSubject, id)
                         plansRevision++
                         nav.navigate(Routes.planView(id, readyDay)) {
                             popUpTo(Routes.quickPlan(id, day)) { inclusive = true }
@@ -201,7 +207,11 @@ fun PedaStudioApp(auth: PhoneAuthController) {
                     navArgument("day") { type = NavType.IntType },
                 ),
             ) { entry ->
-                val lessonId = Routes.decodeLessonId(entry.arguments?.getString("lessonId")) ?: return@composable
+                val lessonId = entry.arguments?.getString("lessonId")?.let { Routes.decodeLessonId(it) }
+                if (lessonId.isNullOrBlank()) {
+                    LaunchedEffect(Unit) { nav.popBackStack() }
+                    return@composable
+                }
                 val day = entry.arguments?.getInt("day") ?: 1
                 PlanViewScreen(
                     lessonId = lessonId,
@@ -219,9 +229,14 @@ fun PedaStudioApp(auth: PhoneAuthController) {
                 route = Routes.LESSON_DETAIL,
                 arguments = listOf(navArgument("lessonId") { type = NavType.StringType }),
             ) { entry ->
-                val lessonId = Routes.decodeLessonId(entry.arguments?.getString("lessonId")) ?: return@composable
+                val lessonId = entry.arguments?.getString("lessonId")?.let { Routes.decodeLessonId(it) }
+                if (lessonId.isNullOrBlank()) {
+                    LaunchedEffect(Unit) { nav.popBackStack() }
+                    return@composable
+                }
                 LessonDetailScreen(
                     lessonId = lessonId,
+                    prefs = prefs,
                     curriculum = curriculum,
                     planStorage = planStorage,
                     firestore = firestore,
@@ -236,7 +251,11 @@ fun PedaStudioApp(auth: PhoneAuthController) {
                 route = Routes.FLASHCARDS,
                 arguments = listOf(navArgument("lessonId") { type = NavType.StringType }),
             ) { entry ->
-                val lessonId = Routes.decodeLessonId(entry.arguments?.getString("lessonId")) ?: return@composable
+                val lessonId = entry.arguments?.getString("lessonId")?.let { Routes.decodeLessonId(it) }
+                if (lessonId.isNullOrBlank()) {
+                    LaunchedEffect(Unit) { nav.popBackStack() }
+                    return@composable
+                }
                 FlashcardsScreen(
                     lessonId = lessonId,
                     flashcards = flashcards,
